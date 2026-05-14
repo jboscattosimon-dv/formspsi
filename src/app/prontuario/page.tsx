@@ -296,7 +296,7 @@ function EtapaIntro({ onAvancar }: { onAvancar: () => void }) {
         <div style={{ marginTop: 18, paddingTop: 16, borderTop: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 10 }}>
           <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#8B1A2E", flexShrink: 0 }} />
           <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 600, fontSize: "0.8rem", color: "#8B1A2E", margin: 0 }}>
-            Letícia Bittencourt Reis — CRP 06/189562
+            Laura Danieli da Silva — CRP 08/47844
           </p>
         </div>
       </div>

@@ -94,7 +94,7 @@ export default function ProntuarioViewPage() {
 
       /* CRP */
       pdf.setFontSize(7); pdf.setTextColor("#8A7A74");
-      pdf.text("Letícia Bittencourt Reis  —  CRP 06/189562", ML, y); y += 10;
+      pdf.text("Laura Danieli da Silva  —  CRP 08/47844", ML, y); y += 10;
 
       /* Nome */
       pdf.setFont("helvetica", "bold");
@@ -288,7 +288,7 @@ export default function ProntuarioViewPage() {
                     {nome}
                   </h1>
                   <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 300, fontSize: "0.75rem", color: "rgba(255,255,255,0.55)", marginTop: 10 }}>
-                    Letícia Bittencourt Reis — CRP 06/189562
+                    Laura Danieli da Silva — CRP 08/47844
                   </p>
                 </div>
                 <div style={{ textAlign: "right", flexShrink: 0, marginLeft: 24 }}>

@@ -4,7 +4,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 
 export const metadata: Metadata = {
   title: "Formspsi — Prontuário Psicológico",
-  description: "Cadastro de prontuário psicológico — Letícia Bittencourt Reis, CRP 06/189562.",
+  description: "Cadastro de prontuário psicológico — Laura Danieli da Silva, CRP 08/47844.",
   icons: { icon: "/favicon.ico" },
 };
 
