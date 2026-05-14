@@ -10,15 +10,15 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-main);
-  background-color: #F3E2CC;
-  color: #2A1612;
+  background-color: #FAF5EE;
+  color: #1A1410;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 .dark body {
-  background-color: #180E09;
-  color: #F0E5D8;
+  background-color: #0F0F0F;
+  color: #EEEEEE;
 }
 
 .grain-overlay {
@@ -50,7 +50,7 @@ body {
 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #D8C8B8; border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: #D0D0D0; border-radius: 2px; }
 ::-webkit-scrollbar-thumb:hover { background: #8B1A2E; }
 
 textarea { resize: none; }
@@ -58,5 +58,5 @@ input:focus, textarea:focus { outline: none; }
 
 @media print {
   .no-print { display: none !important; }
-  body { background: white !important; color: #2A1A12 !important; }
+  body { background: white !important; color: #1A1410 !important; }
 }

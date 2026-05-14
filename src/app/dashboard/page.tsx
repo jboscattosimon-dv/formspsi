@@ -105,14 +105,14 @@ export default function DashboardPage() {
     <div style={{ minHeight: "100vh", background: "var(--dash-bg)", display: "flex", flexDirection: "column" }}>
       <style>{`
         :root {
-          --dash-bg: #F0DEC8; --dash-surface: #F7EDD8; --dash-border: #E0C8A8;
-          --dash-muted: #8A7060; --dash-fg: #2A1612; --dash-red: #8B1A2E;
-          --dash-red-deep: #6B1222; --dash-card: #FBF3E4; --dash-pale: #B09880;
+          --dash-bg: #FAF5EE; --dash-surface: #FDF9F4; --dash-border: #E8DDD0;
+          --dash-muted: #6E6258; --dash-fg: #1A1410; --dash-red: #8B1A2E;
+          --dash-red-deep: #6B1222; --dash-card: #FEFCF8; --dash-pale: #A89888;
         }
         .dark {
-          --dash-bg: #130A05; --dash-surface: #1A1008; --dash-border: #3A200F;
-          --dash-muted: #6A5A4A; --dash-fg: #F0E5D8; --dash-red: #A8263C;
-          --dash-red-deep: #8B1A2E; --dash-card: #1F1208; --dash-pale: #4A3828;
+          --dash-bg: #0F0F0F; --dash-surface: #1A1A1A; --dash-border: #2E2E2E;
+          --dash-muted: #666666; --dash-fg: #EEEEEE; --dash-red: #A8263C;
+          --dash-red-deep: #8B1A2E; --dash-card: #222222; --dash-pale: #444444;
         }
         * { font-family: 'Montserrat', sans-serif; }
         .dash-input {
@@ -121,7 +121,7 @@ export default function DashboardPage() {
           font-size: 0.85rem; font-family: 'Montserrat', sans-serif; font-weight: 300;
           color: var(--dash-fg); width: 100%; transition: border-color 0.2s; outline: none;
         }
-        .dash-input::placeholder { color: #CEC0B8; }
+        .dash-input::placeholder { color: #C0BCBA; }
         .dash-input:focus { border-color: var(--dash-red); }
         .dash-card {
           background: var(--dash-card); border: 1.5px solid var(--dash-border);
@@ -130,10 +130,10 @@ export default function DashboardPage() {
           cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
         }
         .dash-card:hover {
-          border-color: #D4B898; box-shadow: 0 4px 24px rgba(139,26,46,0.07);
+          border-color: #D8D0C8; box-shadow: 0 4px 24px rgba(139,26,46,0.07);
           transform: translateY(-1px);
         }
-        .dark .dash-card:hover { border-color: #4A2820; }
+        .dark .dash-card:hover { border-color: #3A3A3A; }
         .btn-novo {
           display: inline-flex; align-items: center; gap: 8px;
           background: #8B1A2E; color: #fff; border: none; border-radius: 12px;

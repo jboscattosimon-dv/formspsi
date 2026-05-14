@@ -38,7 +38,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-[#F3E2CC] dark:bg-[#1A1614] px-6 relative">
+    <main className="min-h-screen flex items-center justify-center bg-[#FAF5EE] dark:bg-[#0F0F0F] px-6 relative">
       {/* Orb */}
       <div
         className="pointer-events-none absolute top-0 right-0 w-[350px] h-[350px] opacity-15 dark:opacity-8"
@@ -192,7 +192,7 @@ export default function LoginPage() {
         </form>
 
         {/* Demo hint */}
-        <div className="mt-8 p-4 rounded-xl bg-[#F0EBE3] dark:bg-[#231C1A] border border-[#EDE6DC] dark:border-[#2C2320]">
+        <div className="mt-8 p-4 rounded-xl bg-[#F5EDE0] dark:bg-[#1A1A1A] border border-[#E8DDD0] dark:border-[#2E2E2E]">
           <p
             className="text-xs text-[#9B9088] text-center mb-1"
             style={{ fontFamily: "var(--font-inter)", fontWeight: 300 }}

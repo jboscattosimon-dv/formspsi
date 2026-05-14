@@ -209,7 +209,7 @@ export default function ProntuarioViewPage() {
   };
 
   if (!dados) return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#F3E2CC" }}>
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#FAF5EE" }}>
       <div style={{ width: 36, height: 36, borderRadius: "50%", border: "2px solid #8B1A2E", display: "flex", alignItems: "center", justifyContent: "center", animation: "breathe 2s ease-in-out infinite" }}>
         <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#8B1A2E" }} />
       </div>
@@ -223,8 +223,8 @@ export default function ProntuarioViewPage() {
   return (
     <div style={{ minHeight: "100vh", background: "var(--pv-bg)" }}>
       <style>{`
-        :root { --pv-bg:#F0DEC8; --pv-surface:#F7EDD8; --pv-border:#E0C8A8; --pv-fg:#2A1612; --pv-muted:#8A7060; --pv-pale:#B09880; --pv-red:#8B1A2E; --pv-doc:#FBF3E4; }
-        .dark { --pv-bg:#130A05; --pv-surface:#1A1008; --pv-border:#3A200F; --pv-fg:#F0E5D8; --pv-muted:#6A5A4A; --pv-pale:#4A3828; --pv-red:#A8263C; --pv-doc:#180E09; }
+        :root { --pv-bg:#FAF5EE; --pv-surface:#FDF9F4; --pv-border:#E8DDD0; --pv-fg:#1A1410; --pv-muted:#6E6258; --pv-pale:#A89888; --pv-red:#8B1A2E; --pv-doc:#FEFCF8; }
+        .dark { --pv-bg:#0F0F0F; --pv-surface:#1A1A1A; --pv-border:#2E2E2E; --pv-fg:#EEEEEE; --pv-muted:#666666; --pv-pale:#444444; --pv-red:#A8263C; --pv-doc:#111111; }
         * { font-family: 'Montserrat', sans-serif; }
         .pv-toolbar { position:sticky; top:0; z-index:50; background:var(--pv-surface); border-bottom:1.5px solid var(--pv-border); }
         .pv-btn { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:8px; border:none; cursor:pointer; font-size:0.75rem; font-family:'Montserrat',sans-serif; font-weight:500; letter-spacing:0.03em; transition:all 0.18s; }
@@ -275,7 +275,7 @@ export default function ProntuarioViewPage() {
           style={{ background: "var(--pv-doc)", borderRadius: 20, border: "1.5px solid var(--pv-border)", boxShadow: "0 8px 48px rgba(192,57,43,0.06)", overflow: "hidden", opacity: show ? 1 : 0, transform: show ? "translateY(0)" : "translateY(20px)", transition: "opacity 0.6s ease, transform 0.6s ease" }}
         >
           {/* CAPA */}
-          <div style={{ background: "#2A1A12", padding: "52px 56px 44px", position: "relative", overflow: "hidden" }}>
+          <div style={{ background: "#8B1A2E", padding: "52px 56px 44px", position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", top: -60, right: -60, width: 300, height: 300, borderRadius: "50%", background: "rgba(139,26,46,0.25)", filter: "blur(60px)" }} />
             <div style={{ position: "absolute", bottom: -40, left: -20, width: 240, height: 240, borderRadius: "50%", background: "rgba(247,239,228,0.06)", filter: "blur(50px)" }} />
             <div style={{ position: "relative" }}>

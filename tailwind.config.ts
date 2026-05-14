@@ -11,16 +11,16 @@ const config: Config = {
     extend: {
       colors: {
         cream: {
-          50:  "#FDF7EE",
-          100: "#F9F0E2",
-          200: "#F3E2CC",
-          300: "#EAD4B4",
+          50:  "#FEFCF8",
+          100: "#FDF9F4",
+          200: "#FAF5EE",
+          300: "#F5EDE0",
         },
         beige: {
-          100: "#EFE0CA",
-          200: "#E8D5B8",
-          300: "#D9C4A2",
-          400: "#C9B08C",
+          100: "#EDE5D8",
+          200: "#E0D5C4",
+          300: "#CFC0AC",
+          400: "#BBAA94",
         },
         rose: {
           warm: "#C4897A",
@@ -41,10 +41,10 @@ const config: Config = {
           light: "#CEC8C2",
         },
         dark: {
-          bg:      "#1A1614",
-          surface: "#231C1A",
-          card:    "#2C2320",
-          border:  "#3D302C",
+          bg:      "#111111",
+          surface: "#1A1A1A",
+          card:    "#222222",
+          border:  "#2E2E2E",
         },
       },
       fontFamily: {

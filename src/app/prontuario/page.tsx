@@ -116,23 +116,23 @@ export default function ProntuarioPage() {
     <main style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "var(--bg)", position: "relative" }}>
       <style>{`
         :root {
-          --bg: #F3E2CC; --fg: #2A1612; --muted: #8A7060;
-          --border: #E0C8A8; --red: #8B1A2E; --red-deep: #6B1222;
-          --cream: #EDD5B5; --pale: #B09880;
+          --bg: #FAF5EE; --fg: #1A1410; --muted: #6E6258;
+          --border: #E8DDD0; --red: #8B1A2E; --red-deep: #6B1222;
+          --cream: #F5EDE0; --pale: #A89888;
         }
         .dark {
-          --bg: #180E09; --fg: #F0E5D8; --muted: #8A7870;
-          --border: #3A200F; --red: #A8263C; --red-deep: #8B1A2E;
-          --cream: #221208; --pale: #6A5A4A;
+          --bg: #0F0F0F; --fg: #EEEEEE; --muted: #666666;
+          --border: #2E2E2E; --red: #A8263C; --red-deep: #8B1A2E;
+          --cream: #222222; --pale: #444444;
         }
         .pron-input {
           width: 100%; background: transparent;
-          border: none; border-bottom: 1.5px solid #D4B898;
+          border: none; border-bottom: 1.5px solid #D8D0C4;
           color: var(--fg); padding: 12px 0; font-size: 1rem;
           font-family: 'Montserrat', sans-serif; font-weight: 300;
           transition: border-color 0.2s;
         }
-        .pron-input::placeholder { color: #CEC0B8; }
+        .pron-input::placeholder { color: #C0BCBA; }
         .pron-input:focus { outline: none; border-color: var(--red); }
         .dark .pron-input { border-color: #3A201A; color: #F0E5DC; }
         .dark .pron-input:focus { border-color: var(--red); }
