@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { listarProntuarios, deletarProntuario as deletarSupabase } from "@/lib/supabase";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { Search, Plus, FileText, Trash2, LogOut, ChevronRight } from "lucide-react";
+import { Search, Plus, FileText, Trash2, LogOut, ChevronRight, BookOpen } from "lucide-react";
 
 interface ProntuarioItem {
   id: string;
@@ -198,6 +198,10 @@ export default function DashboardPage() {
             <button className="nav-link" onClick={novoForm}>
               <Plus size={15} strokeWidth={1.5} />
               Novo prontuário
+            </button>
+            <button className="nav-link" onClick={() => router.push("/indicacoes")}>
+              <BookOpen size={15} strokeWidth={1.5} />
+              Indicações
             </button>
           </nav>
 
