@@ -51,7 +51,7 @@ export default function ProntuarioViewPage() {
   const [show,       setShow]       = useState(false);
 
   useEffect(() => {
-    const hist: ProntuarioData[] = JSON.parse(localStorage.getItem("indicapsi-historico") || "[]");
+    const hist: ProntuarioData[] = JSON.parse(localStorage.getItem("formspsi-historico") || "[]");
     const pron = hist.find(p => p.id === id);
     if (pron) { setDados(pron); setEditForm(pron); }
     setTimeout(() => setShow(true), 120);
@@ -59,9 +59,9 @@ export default function ProntuarioViewPage() {
 
   const salvar = () => {
     if (!editForm) return;
-    const hist: ProntuarioData[] = JSON.parse(localStorage.getItem("indicapsi-historico") || "[]");
+    const hist: ProntuarioData[] = JSON.parse(localStorage.getItem("formspsi-historico") || "[]");
     const i = hist.findIndex(p => p.id === id);
-    if (i !== -1) { hist[i] = editForm; localStorage.setItem("indicapsi-historico", JSON.stringify(hist)); }
+    if (i !== -1) { hist[i] = editForm; localStorage.setItem("formspsi-historico", JSON.stringify(hist)); }
     setDados(editForm);
     setEditando(false);
   };
@@ -80,28 +80,28 @@ export default function ProntuarioViewPage() {
 
       const checkPage = (need: number) => { if (y + need > 272) { pdf.addPage(); y = 24; } };
 
-      const hline = (color = "#EDE6DC") => {
+      const hline = (color = "#E5D8CC") => {
         pdf.setDrawColor(color); pdf.setLineWidth(0.3);
         pdf.line(ML, y, W - MR, y); y += 6;
       };
 
-      /* ── Cabeçalho ── */
+      /* Cabeçalho */
       pdf.setFont("helvetica", "normal");
-      pdf.setFontSize(7); pdf.setTextColor("#B5ABA3");
-      pdf.text("INDICAPSI  ·  PRONTUÁRIO PSICOLÓGICO", ML, y);
+      pdf.setFontSize(7); pdf.setTextColor("#B5A8A0");
+      pdf.text("FORMSPSI  ·  PRONTUÁRIO PSICOLÓGICO", ML, y);
       pdf.text(formatDataCurta(dados.criado_em), W - MR, y, { align: "right" });
-      y += 6; hline("#D9CEBF");
+      y += 6; hline("#D9CBBF");
 
-      /* ── CRP ── */
-      pdf.setFontSize(7); pdf.setTextColor("#9B9088");
+      /* CRP */
+      pdf.setFontSize(7); pdf.setTextColor("#8A7A74");
       pdf.text("Letícia Bittencourt Reis  —  CRP 06/189562", ML, y); y += 10;
 
-      /* ── Nome ── */
-      pdf.setFont("times", "italic");
-      pdf.setFontSize(28); pdf.setTextColor("#4A3328");
+      /* Nome */
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(26); pdf.setTextColor("#2A1815");
       pdf.text(nome, ML, y); y += 12;
 
-      /* ── Dados pessoais em grid ── */
+      /* Dados pessoais */
       const cols = [
         { label: "DATA DE NASC.", valor: dados.data_nascimento },
         { label: "GÊNERO", valor: dados.genero },
@@ -113,16 +113,16 @@ export default function ProntuarioViewPage() {
         const cw = colW / Math.min(cols.length, 3);
         cols.forEach((c, i) => {
           const x = ML + i * cw;
-          pdf.setFontSize(7); pdf.setTextColor("#9B9088");
+          pdf.setFontSize(7); pdf.setTextColor("#8A7A74");
           pdf.text(c.label!, x, y);
-          pdf.setFontSize(9.5); pdf.setTextColor("#4A3328");
+          pdf.setFontSize(9.5); pdf.setTextColor("#2A1815");
           pdf.text(c.valor || "—", x, y + 5);
         });
         y += 16;
       }
-      hline("#EDE6DC");
+      hline();
 
-      /* ── Contato ── */
+      /* Contato */
       const contato = [
         { label: "CPF", valor: dados.cpf },
         { label: "WHATSAPP", valor: dados.whatsapp },
@@ -133,76 +133,70 @@ export default function ProntuarioViewPage() {
 
       if (contato.length) {
         checkPage(20);
-        pdf.setFontSize(8); pdf.setTextColor("#C4897A"); pdf.setFont("helvetica", "normal");
+        pdf.setFontSize(8); pdf.setTextColor("#C0392B"); pdf.setFont("helvetica", "bold");
         pdf.text("CONTATO E LOCALIZAÇÃO", ML, y); y += 6;
         const cw2 = contato.length >= 2 ? colW / 2 : colW;
         const linhas = Math.ceil(contato.length / 2);
         contato.forEach((c, i) => {
-          const col = i % 2;
-          const lin = Math.floor(i / 2);
-          const x = ML + col * cw2;
-          const yy = y + lin * 12;
-          pdf.setFontSize(7); pdf.setTextColor("#9B9088");
-          pdf.text(c.label!, x, yy);
-          pdf.setFontSize(9); pdf.setTextColor("#4A3328");
-          pdf.text(c.valor || "—", x, yy + 4.5);
+          const col = i % 2; const lin = Math.floor(i / 2);
+          const x = ML + col * cw2; const yy = y + lin * 12;
+          pdf.setFont("helvetica", "normal");
+          pdf.setFontSize(7); pdf.setTextColor("#8A7A74"); pdf.text(c.label!, x, yy);
+          pdf.setFontSize(9); pdf.setTextColor("#2A1815"); pdf.text(c.valor || "—", x, yy + 4.5);
         });
-        y += linhas * 12 + 4;
-        hline("#EDE6DC");
+        y += linhas * 12 + 4; hline();
       }
 
-      /* ── Profissão + Modalidade ── */
+      /* Perfil */
       const perfil = [
         { label: "PROFISSÃO", valor: dados.profissao },
         { label: "MODALIDADE", valor: dados.modalidade },
       ].filter(c => c.valor);
       if (perfil.length) {
         checkPage(16);
-        pdf.setFontSize(8); pdf.setTextColor("#C4897A"); pdf.setFont("helvetica", "normal");
+        pdf.setFontSize(8); pdf.setTextColor("#C0392B"); pdf.setFont("helvetica", "bold");
         pdf.text("PERFIL", ML, y); y += 6;
         perfil.forEach((c, i) => {
-          pdf.setFontSize(7); pdf.setTextColor("#9B9088");
-          pdf.text(c.label!, ML + i * (colW / 2), y);
-          pdf.setFontSize(9.5); pdf.setTextColor("#4A3328");
-          pdf.text(c.valor || "—", ML + i * (colW / 2), y + 5);
+          pdf.setFont("helvetica", "normal");
+          pdf.setFontSize(7); pdf.setTextColor("#8A7A74"); pdf.text(c.label!, ML + i * (colW / 2), y);
+          pdf.setFontSize(9.5); pdf.setTextColor("#2A1815"); pdf.text(c.valor || "—", ML + i * (colW / 2), y + 5);
         });
-        y += 16; hline("#EDE6DC");
+        y += 16; hline();
       }
 
-      /* ── Medicação ── */
+      /* Medicação */
       if (dados.medicacao) {
         checkPage(20);
-        pdf.setFontSize(8); pdf.setTextColor("#C4897A"); pdf.setFont("helvetica", "normal");
+        pdf.setFontSize(8); pdf.setTextColor("#C0392B"); pdf.setFont("helvetica", "bold");
         pdf.text("MEDICAÇÃO PSIQUIÁTRICA", ML, y); y += 6;
         pdf.setFont("helvetica", "normal");
-        pdf.setFontSize(9.5); pdf.setTextColor("#4A3328");
+        pdf.setFontSize(9.5); pdf.setTextColor("#2A1815");
         const mLines = pdf.splitTextToSize(dados.medicacao, colW);
         mLines.forEach((l: string) => { checkPage(6); pdf.text(l, ML, y); y += 5.5; });
-        y += 4; hline("#EDE6DC");
+        y += 4; hline();
       }
 
-      /* ── Motivo da Consulta ── */
+      /* Motivo */
       if (dados.motivo) {
-        checkPage(24);
-        y += 4;
-        pdf.setFont("times", "italic");
-        pdf.setFontSize(8); pdf.setTextColor("#C4897A");
-        pdf.text("Motivo da consulta", ML, y); y += 8;
-        pdf.setDrawColor("#EDE6DC"); pdf.setLineWidth(0.2);
+        checkPage(24); y += 4;
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(8); pdf.setTextColor("#C0392B");
+        pdf.text("MOTIVO DA CONSULTA", ML, y); y += 8;
+        pdf.setDrawColor("#E5D8CC"); pdf.setLineWidth(0.2);
         pdf.line(ML, y - 4, W - MR, y - 4);
         pdf.setFont("helvetica", "normal");
-        pdf.setFontSize(9.5); pdf.setTextColor("#4A3328");
+        pdf.setFontSize(9.5); pdf.setTextColor("#2A1815");
         const mLines = pdf.splitTextToSize(dados.motivo, colW);
         mLines.forEach((l: string) => { checkPage(6); pdf.text(l, ML, y); y += 5.5; });
       }
 
-      /* ── Rodapé em todas as páginas ── */
+      /* Rodapé */
       const total = pdf.getNumberOfPages();
       for (let pg = 1; pg <= total; pg++) {
         pdf.setPage(pg);
         pdf.setFont("helvetica", "normal");
-        pdf.setFontSize(7); pdf.setTextColor("#CEC8C2");
-        pdf.text("indicapsi — documento confidencial  ·  Resolução CFP 001/2009", ML, 288);
+        pdf.setFontSize(7); pdf.setTextColor("#CEC0B8");
+        pdf.text("formspsi — documento confidencial  ·  Resolução CFP 001/2009", ML, 288);
         pdf.text(`${pg} / ${total}`, W - MR, 288, { align: "right" });
       }
 
@@ -215,9 +209,9 @@ export default function ProntuarioViewPage() {
   };
 
   if (!dados) return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#FAF9F7" }}>
-      <div style={{ width: 36, height: 36, borderRadius: "50%", border: "1.5px solid #C4897A", display: "flex", alignItems: "center", justifyContent: "center", animation: "breathe 2s ease-in-out infinite" }}>
-        <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#C4897A" }} />
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#FAF6F0" }}>
+      <div style={{ width: 36, height: 36, borderRadius: "50%", border: "2px solid #C0392B", display: "flex", alignItems: "center", justifyContent: "center", animation: "breathe 2s ease-in-out infinite" }}>
+        <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#C0392B" }} />
       </div>
     </div>
   );
@@ -229,21 +223,22 @@ export default function ProntuarioViewPage() {
   return (
     <div style={{ minHeight: "100vh", background: "var(--pv-bg)" }}>
       <style>{`
-        :root { --pv-bg:#F5F1EC; --pv-surface:#FDFCFA; --pv-border:#E8DDD1; --pv-fg:#4A3328; --pv-muted:#9B9088; --pv-pale:#B5ABA3; --pv-rose:#C4897A; --pv-doc:#FFFFFF; }
-        .dark { --pv-bg:#161210; --pv-surface:#1E1814; --pv-border:#2C2320; --pv-fg:#E8DDD1; --pv-muted:#7A6E6A; --pv-pale:#5A4E4A; --pv-rose:#C4897A; --pv-doc:#1A1614; }
+        :root { --pv-bg:#F5F0EA; --pv-surface:#FDFAF7; --pv-border:#E5D8CC; --pv-fg:#2A1815; --pv-muted:#8A7A74; --pv-pale:#B5A8A0; --pv-red:#C0392B; --pv-doc:#FFFFFF; }
+        .dark { --pv-bg:#140D0B; --pv-surface:#1C1210; --pv-border:#3A201A; --pv-fg:#F0E5DC; --pv-muted:#6A5A54; --pv-pale:#4A3830; --pv-red:#D44030; --pv-doc:#1A0F0D; }
+        * { font-family: 'Montserrat', sans-serif; }
         .pv-toolbar { position:sticky; top:0; z-index:50; background:var(--pv-surface); border-bottom:1.5px solid var(--pv-border); }
-        .pv-btn { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:8px; border:none; cursor:pointer; font-size:0.78rem; font-family:Inter,system-ui,sans-serif; font-weight:400; transition:all 0.18s; }
+        .pv-btn { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:8px; border:none; cursor:pointer; font-size:0.75rem; font-family:'Montserrat',sans-serif; font-weight:500; letter-spacing:0.03em; transition:all 0.18s; }
         .pv-btn-ghost { background:transparent; color:var(--pv-muted); }
         .pv-btn-ghost:hover { background:var(--pv-bg); color:var(--pv-fg); }
         .pv-btn-outline { background:transparent; border:1.5px solid var(--pv-border) !important; color:var(--pv-muted); }
-        .pv-btn-outline:hover { border-color:var(--pv-rose) !important; color:var(--pv-rose); }
-        .pv-btn-rose { background:#C4897A; color:#fff; }
-        .pv-btn-rose:hover { background:#A96B5C; }
+        .pv-btn-outline:hover { border-color:var(--pv-red) !important; color:var(--pv-red); }
+        .pv-btn-red { background:#C0392B; color:#fff; }
+        .pv-btn-red:hover { background:#9B2E22; }
         .pv-btn-dark { background:var(--pv-fg); color:var(--pv-doc); }
         .pv-btn-dark:hover { opacity:0.85; }
         .pv-btn-dark:disabled { opacity:0.5; cursor:not-allowed; }
-        .pv-edit { width:100%; background:transparent; border:none; border-bottom:1.5px solid var(--pv-rose); color:var(--pv-fg); font-family:Inter,system-ui,sans-serif; font-size:0.95rem; font-weight:300; padding:6px 0; outline:none; }
-        .pv-edit-area { width:100%; background:transparent; border:none; border-bottom:1.5px solid var(--pv-rose); color:var(--pv-fg); font-family:Inter,system-ui,sans-serif; font-size:0.95rem; font-weight:300; line-height:1.85; padding:8px 0; resize:none; outline:none; }
+        .pv-edit { width:100%; background:transparent; border:none; border-bottom:1.5px solid var(--pv-red); color:var(--pv-fg); font-family:'Montserrat',sans-serif; font-size:0.92rem; font-weight:400; padding:6px 0; outline:none; }
+        .pv-edit-area { width:100%; background:transparent; border:none; border-bottom:1.5px solid var(--pv-red); color:var(--pv-fg); font-family:'Montserrat',sans-serif; font-size:0.92rem; font-weight:300; line-height:1.85; padding:8px 0; resize:none; outline:none; }
         @media print { .pv-toolbar { display:none !important; } .pv-doc { box-shadow:none !important; border:none !important; } }
       `}</style>
 
@@ -257,7 +252,7 @@ export default function ProntuarioViewPage() {
             {editando ? (
               <>
                 <button className="pv-btn pv-btn-outline" onClick={cancelar}><X size={13} strokeWidth={1.5} /> cancelar</button>
-                <button className="pv-btn pv-btn-rose" onClick={salvar}><Save size={13} strokeWidth={1.5} /> salvar</button>
+                <button className="pv-btn pv-btn-red" onClick={salvar}><Save size={13} strokeWidth={1.5} /> salvar</button>
               </>
             ) : (
               <>
@@ -277,28 +272,28 @@ export default function ProntuarioViewPage() {
       <div style={{ maxWidth: 920, margin: "0 auto", padding: "48px 28px 80px" }}>
         <div
           className="pv-doc"
-          style={{ background: "var(--pv-doc)", borderRadius: 20, border: "1.5px solid var(--pv-border)", boxShadow: "0 8px 48px rgba(107,76,59,0.08)", overflow: "hidden", opacity: show ? 1 : 0, transform: show ? "translateY(0)" : "translateY(20px)", transition: "opacity 0.6s ease, transform 0.6s ease" }}
+          style={{ background: "var(--pv-doc)", borderRadius: 20, border: "1.5px solid var(--pv-border)", boxShadow: "0 8px 48px rgba(192,57,43,0.06)", overflow: "hidden", opacity: show ? 1 : 0, transform: show ? "translateY(0)" : "translateY(20px)", transition: "opacity 0.6s ease, transform 0.6s ease" }}
         >
           {/* CAPA */}
-          <div style={{ background: "#4A3328", padding: "52px 56px 44px", position: "relative", overflow: "hidden" }}>
-            <div style={{ position: "absolute", top: -60, right: -60, width: 240, height: 240, borderRadius: "50%", background: "rgba(196,137,122,0.15)", filter: "blur(40px)" }} />
-            <div style={{ position: "absolute", bottom: -40, left: 0, width: 180, height: 180, borderRadius: "50%", background: "rgba(232,196,187,0.08)", filter: "blur(30px)" }} />
+          <div style={{ background: "#C0392B", padding: "52px 56px 44px", position: "relative", overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: -60, right: -60, width: 280, height: 280, borderRadius: "50%", background: "rgba(255,255,255,0.08)", filter: "blur(40px)" }} />
+            <div style={{ position: "absolute", bottom: -40, left: -20, width: 220, height: 220, borderRadius: "50%", background: "rgba(0,0,0,0.08)", filter: "blur(40px)" }} />
             <div style={{ position: "relative" }}>
-              <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontWeight: 300, fontSize: "0.65rem", letterSpacing: "0.26em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)", marginBottom: 8 }}>
+              <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: "0.58rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "rgba(255,255,255,0.5)", marginBottom: 10 }}>
                 prontuário psicológico
               </p>
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 32 }}>
                 <div>
-                  <h1 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic", fontWeight: 400, fontSize: "clamp(2rem, 5vw, 3.2rem)", color: "#FAF9F7", lineHeight: 1.15 }}>
+                  <h1 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: "clamp(1.8rem, 5vw, 3rem)", color: "#fff", lineHeight: 1.15 }}>
                     {nome}
                   </h1>
-                  <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontWeight: 300, fontSize: "0.75rem", color: "rgba(255,255,255,0.4)", marginTop: 10 }}>
+                  <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 300, fontSize: "0.75rem", color: "rgba(255,255,255,0.55)", marginTop: 10 }}>
                     Letícia Bittencourt Reis — CRP 06/189562
                   </p>
                 </div>
                 <div style={{ textAlign: "right", flexShrink: 0, marginLeft: 24 }}>
-                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#C4897A", marginLeft: "auto", marginBottom: 8 }} />
-                  <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontWeight: 300, fontSize: "0.75rem", color: "rgba(255,255,255,0.45)", lineHeight: 1.6 }}>
+                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: "rgba(255,255,255,0.6)", marginLeft: "auto", marginBottom: 8 }} />
+                  <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 300, fontSize: "0.75rem", color: "rgba(255,255,255,0.5)", lineHeight: 1.6 }}>
                     {formatDataLonga(dados.criado_em)}
                   </p>
                 </div>
@@ -314,8 +309,6 @@ export default function ProntuarioViewPage() {
 
           {/* CORPO */}
           <div style={{ padding: "52px 56px" }}>
-
-            {/* Seção: Identificação */}
             <Secao titulo="Identificação">
               <GridCampos>
                 <CampoView label="Nome Completo / Nome Social" valor={ef.paciente_nome || ef.nome} editando={editando} onChange={setEF("paciente_nome")} />
@@ -325,7 +318,6 @@ export default function ProntuarioViewPage() {
               </GridCampos>
             </Secao>
 
-            {/* Seção: Contato e Localização */}
             <Secao titulo="Contato e Localização">
               <GridCampos>
                 <CampoView label="CPF" valor={ef.cpf} editando={editando} onChange={setEF("cpf")} />
@@ -338,7 +330,6 @@ export default function ProntuarioViewPage() {
               </div>
             </Secao>
 
-            {/* Seção: Perfil */}
             <Secao titulo="Perfil">
               <GridCampos>
                 <CampoView label="Profissão" valor={ef.profissao} editando={editando} onChange={setEF("profissao")} />
@@ -346,37 +337,27 @@ export default function ProntuarioViewPage() {
               </GridCampos>
             </Secao>
 
-            {/* Seção: Saúde */}
             <Secao titulo="Saúde">
               <CampoView label="Medicação Psiquiátrica" valor={ef.medicacao} editando={editando} onChange={setEF("medicacao")} />
             </Secao>
 
-            {/* Seção: Motivo */}
             <Secao titulo="Motivo da Consulta" ultima>
               {editando ? (
-                <textarea
-                  className="pv-edit-area"
-                  value={ef.motivo || ""}
-                  onChange={e => setEF("motivo")(e.target.value)}
-                  rows={8}
-                />
+                <textarea className="pv-edit-area" value={ef.motivo || ""} onChange={e => setEF("motivo")(e.target.value)} rows={8} />
               ) : (
-                <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontWeight: 300, fontSize: "0.96rem", color: "var(--pv-fg)", lineHeight: 1.9, whiteSpace: "pre-wrap" }}>
+                <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 300, fontSize: "0.95rem", color: "var(--pv-fg)", lineHeight: 1.9, whiteSpace: "pre-wrap" }}>
                   {ef.motivo?.trim() || (
-                    <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic", color: "var(--pv-pale)" }}>
-                      não informado
-                    </span>
+                    <span style={{ fontStyle: "italic", color: "var(--pv-pale)", fontSize: "0.88rem" }}>não informado</span>
                   )}
                 </p>
               )}
             </Secao>
 
-            {/* Rodapé */}
             <div style={{ marginTop: 64, paddingTop: 24, borderTop: "1px solid var(--pv-border)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic", fontWeight: 400, fontSize: "0.78rem", color: "var(--pv-pale)" }}>
-                indicapsi — prontuário psicológico digital
+              <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 600, fontSize: "0.7rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--pv-pale)" }}>
+                formspsi
               </p>
-              <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontWeight: 300, fontSize: "0.72rem", color: "var(--pv-pale)", letterSpacing: "0.1em" }}>
+              <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 300, fontSize: "0.72rem", color: "var(--pv-pale)", letterSpacing: "0.08em" }}>
                 Resolução CFP 001/2009 · documento confidencial
               </p>
             </div>
@@ -391,9 +372,9 @@ export default function ProntuarioViewPage() {
 
 function InfoChip({ label, valor, destaque = false }: { label: string; valor: string; destaque?: boolean }) {
   return (
-    <div style={{ padding: "6px 14px", borderRadius: 999, background: destaque ? "rgba(196,137,122,0.25)" : "rgba(255,255,255,0.07)", border: `1px solid ${destaque ? "rgba(196,137,122,0.4)" : "rgba(255,255,255,0.1)"}` }}>
-      <span style={{ fontFamily: "Inter, system-ui, sans-serif", fontWeight: 300, fontSize: "0.68rem", letterSpacing: "0.12em", textTransform: "uppercase", color: destaque ? "#C4897A" : "rgba(255,255,255,0.4)", marginRight: 6 }}>{label}</span>
-      <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic", fontSize: "0.85rem", color: destaque ? "#E8C4BB" : "rgba(255,255,255,0.75)" }}>{valor}</span>
+    <div style={{ padding: "6px 14px", borderRadius: 999, background: destaque ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.1)", border: `1px solid ${destaque ? "rgba(255,255,255,0.4)" : "rgba(255,255,255,0.15)"}` }}>
+      <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 600, fontSize: "0.6rem", letterSpacing: "0.15em", textTransform: "uppercase", color: destaque ? "#fff" : "rgba(255,255,255,0.5)", marginRight: 6 }}>{label}</span>
+      <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 400, fontSize: "0.82rem", color: "#fff" }}>{valor}</span>
     </div>
   );
 }
@@ -402,7 +383,7 @@ function Secao({ titulo, children, ultima = false }: { titulo: string; children:
   return (
     <div style={{ marginBottom: ultima ? 0 : 48, paddingBottom: ultima ? 0 : 48, borderBottom: ultima ? "none" : "1px solid var(--pv-border)" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 28 }}>
-        <span style={{ fontFamily: "Inter, system-ui, sans-serif", fontWeight: 300, fontSize: "0.68rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "#C4897A", whiteSpace: "nowrap" }}>
+        <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: "0.6rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#C0392B", whiteSpace: "nowrap" }}>
           {titulo}
         </span>
         <div style={{ flex: 1, height: 1, background: "var(--pv-border)" }} />
@@ -425,21 +406,14 @@ function CampoView({ label, valor, editando, onChange }: {
 }) {
   return (
     <div>
-      <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontWeight: 300, fontSize: "0.66rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--pv-pale)", marginBottom: 6 }}>
+      <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: "0.6rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--pv-pale)", marginBottom: 6 }}>
         {label}
       </p>
       {editando ? (
-        <input
-          className="pv-edit"
-          type="text"
-          value={valor || ""}
-          onChange={e => onChange(e.target.value)}
-        />
+        <input className="pv-edit" type="text" value={valor || ""} onChange={e => onChange(e.target.value)} />
       ) : (
-        <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontWeight: 400, fontSize: "0.95rem", color: "var(--pv-fg)", lineHeight: 1.5 }}>
-          {valor?.trim() || (
-            <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic", color: "var(--pv-pale)", fontSize: "0.88rem" }}>—</span>
-          )}
+        <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 400, fontSize: "0.92rem", color: "var(--pv-fg)", lineHeight: 1.5 }}>
+          {valor?.trim() || <span style={{ fontStyle: "italic", color: "var(--pv-pale)", fontSize: "0.85rem" }}>—</span>}
         </p>
       )}
     </div>

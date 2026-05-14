@@ -15,7 +15,7 @@ export default function LoginPage() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    const auth = localStorage.getItem("indicapsi-auth");
+    const auth = localStorage.getItem("formspsi-auth");
     if (auth) router.push("/dashboard");
     setTimeout(() => setShow(true), 100);
   }, [router]);
@@ -29,7 +29,7 @@ export default function LoginPage() {
 
     // Credenciais demo — substituir por Supabase Auth
     if (email === "psi@indicapsi.com" && senha === "indicapsi2024") {
-      localStorage.setItem("indicapsi-auth", JSON.stringify({ email, entrou_em: new Date().toISOString() }));
+      localStorage.setItem("formspsi-auth", JSON.stringify({ email, entrou_em: new Date().toISOString() }));
       router.push("/dashboard");
     } else {
       setErro("E-mail ou senha incorretos.");

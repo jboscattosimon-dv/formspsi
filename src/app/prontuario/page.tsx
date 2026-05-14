@@ -24,8 +24,6 @@ const VAZIO: ProntuarioForm = {
   whatsapp: "", email: "", profissao: "", medicacao: "", motivo: "",
 };
 
-const ETAPAS: Etapa[] = ["intro", "identificacao", "contato", "profissao", "saude", "motivo"];
-
 function pctEtapa(etapa: Etapa): number {
   const map: Record<Etapa, number> = {
     intro: 0, identificacao: 20, contato: 40, profissao: 60, saude: 75, motivo: 88,
@@ -43,12 +41,12 @@ export default function ProntuarioPage() {
   const [prontuarioId, setProntuarioId] = useState<string | null>(null);
 
   useEffect(() => {
-    const draft = localStorage.getItem("indicapsi-draft");
+    const draft = localStorage.getItem("formspsi-draft");
     if (draft) { try { setForm(JSON.parse(draft)); } catch {} }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("indicapsi-draft", JSON.stringify(form));
+    localStorage.setItem("formspsi-draft", JSON.stringify(form));
   }, [form]);
 
   const ir = useCallback((fn: () => void) => {
@@ -62,25 +60,15 @@ export default function ProntuarioPage() {
   }, []);
 
   const proximaEtapa: Record<Etapa, Etapa | null> = {
-    intro: "identificacao",
-    identificacao: "contato",
-    contato: "profissao",
-    profissao: "saude",
-    saude: "motivo",
-    motivo: "finalizando",
-    finalizando: "concluido",
-    concluido: null,
+    intro: "identificacao", identificacao: "contato", contato: "profissao",
+    profissao: "saude", saude: "motivo", motivo: "finalizando",
+    finalizando: "concluido", concluido: null,
   };
 
   const etapaAnterior: Record<Etapa, Etapa | null> = {
-    intro: null,
-    identificacao: "intro",
-    contato: "identificacao",
-    profissao: "contato",
-    saude: "profissao",
-    motivo: "saude",
-    finalizando: null,
-    concluido: null,
+    intro: null, identificacao: "intro", contato: "identificacao",
+    profissao: "contato", saude: "profissao", motivo: "saude",
+    finalizando: null, concluido: null,
   };
 
   const avancar = () => {
@@ -102,27 +90,17 @@ export default function ProntuarioPage() {
   const finalizar = async () => {
     const id = `pron_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
     const dados = {
-      id,
-      paciente_nome: form.nome,
-      data_nascimento: form.data_nascimento,
-      genero: form.genero,
-      estado_civil: form.estado_civil,
-      cpf: form.cpf,
-      endereco: form.endereco,
-      cidade_estado: form.cidade_estado,
-      modalidade: form.modalidade,
-      whatsapp: form.whatsapp,
-      email: form.email,
-      profissao: form.profissao,
-      medicacao: form.medicacao,
-      motivo: form.motivo,
-      criado_em: new Date().toISOString(),
-      status: "completo",
+      id, paciente_nome: form.nome, data_nascimento: form.data_nascimento,
+      genero: form.genero, estado_civil: form.estado_civil, cpf: form.cpf,
+      endereco: form.endereco, cidade_estado: form.cidade_estado,
+      modalidade: form.modalidade, whatsapp: form.whatsapp, email: form.email,
+      profissao: form.profissao, medicacao: form.medicacao, motivo: form.motivo,
+      criado_em: new Date().toISOString(), status: "completo",
     };
-    const hist = JSON.parse(localStorage.getItem("indicapsi-historico") || "[]");
+    const hist = JSON.parse(localStorage.getItem("formspsi-historico") || "[]");
     hist.unshift({ ...dados, nome: form.nome });
-    localStorage.setItem("indicapsi-historico", JSON.stringify(hist));
-    localStorage.removeItem("indicapsi-draft");
+    localStorage.setItem("formspsi-historico", JSON.stringify(hist));
+    localStorage.removeItem("formspsi-draft");
     try { await salvarProntuario(dados); } catch {}
     setProntuarioId(id);
     setTimeout(() => setEtapa("concluido"), 1800);
@@ -137,94 +115,100 @@ export default function ProntuarioPage() {
   return (
     <main style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "var(--bg)", position: "relative" }}>
       <style>{`
-        :root { --bg: #FAF9F7; --fg: #4A3328; --muted: #9B9088; --border: #EDE6DC; --rose: #C4897A; --rose-deep: #A96B5C; --cream: #F0EBE3; }
-        .dark { --bg: #1A1614; --fg: #E8DDD1; --muted: #9B9088; --border: #2C2320; --cream: #231C1A; }
+        :root {
+          --bg: #FAF6F0; --fg: #2A1815; --muted: #8A7A74;
+          --border: #E5D8CC; --red: #C0392B; --red-deep: #9B2E22;
+          --cream: #F0E8DC; --pale: #B5A8A0;
+        }
+        .dark {
+          --bg: #1A0F0D; --fg: #F0E5DC; --muted: #8A7A74;
+          --border: #3A201A; --red: #D44030; --red-deep: #C0392B;
+          --cream: #231411; --pale: #6A5A54;
+        }
         .pron-input {
           width: 100%; background: transparent;
-          border: none; border-bottom: 1.5px solid #D9CEBF;
-          color: var(--fg); padding: 12px 0; font-size: 1.05rem;
-          font-family: 'Inter', system-ui, sans-serif; font-weight: 300;
+          border: none; border-bottom: 1.5px solid #D9CBBF;
+          color: var(--fg); padding: 12px 0; font-size: 1rem;
+          font-family: 'Montserrat', sans-serif; font-weight: 300;
           transition: border-color 0.2s;
         }
-        .pron-input::placeholder { color: #CEC8C2; }
-        .pron-input:focus { outline: none; border-color: #C4897A; }
-        .dark .pron-input { border-color: #3D302C; color: #E8DDD1; }
-        .dark .pron-input:focus { border-color: #C4897A; }
+        .pron-input::placeholder { color: #CEC0B8; }
+        .pron-input:focus { outline: none; border-color: var(--red); }
+        .dark .pron-input { border-color: #3A201A; color: #F0E5DC; }
+        .dark .pron-input:focus { border-color: var(--red); }
         .pron-textarea {
           width: 100%; background: transparent;
-          border: 1.5px solid #EDE6DC; border-radius: 14px;
+          border: 1.5px solid var(--border); border-radius: 12px;
           color: var(--fg); padding: 18px 20px;
-          font-size: 0.96rem; font-family: 'Inter', system-ui, sans-serif;
-          font-weight: 300; line-height: 1.9; resize: none;
+          font-size: 0.95rem; font-family: 'Montserrat', sans-serif;
+          font-weight: 300; line-height: 1.85; resize: none;
           transition: border-color 0.2s;
         }
-        .pron-textarea::placeholder { color: #CEC8C2; }
-        .pron-textarea:focus { outline: none; border-color: #C4897A; }
-        .dark .pron-textarea { border-color: #2C2320; color: #E8DDD1; }
-        .dark .pron-textarea:focus { border-color: #C4897A; }
+        .pron-textarea::placeholder { color: #CEC0B8; }
+        .pron-textarea:focus { outline: none; border-color: var(--red); }
+        .dark .pron-textarea { border-color: #3A201A; color: #F0E5DC; }
+        .dark .pron-textarea:focus { border-color: var(--red); }
         .btn-primary {
           display: inline-flex; align-items: center; gap: 10px;
           padding: 14px 32px; border-radius: 999px; border: none; cursor: pointer;
-          background: #4A3328; color: #FAF9F7;
-          font-family: 'Inter', system-ui, sans-serif; font-size: 0.875rem;
-          font-weight: 400; letter-spacing: 0.06em;
+          background: #C0392B; color: #fff;
+          font-family: 'Montserrat', sans-serif; font-size: 0.75rem;
+          font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
           transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
         }
-        .dark .btn-primary { background: #C4897A; color: #fff; }
-        .btn-primary:hover { background: #6B4C3B; transform: translateY(-1px); box-shadow: 0 8px 28px rgba(196,137,122,0.28); }
-        .dark .btn-primary:hover { background: #A96B5C; }
-        .btn-rose {
+        .btn-primary:hover { background: #9B2E22; transform: translateY(-1px); box-shadow: 0 8px 28px rgba(192,57,43,0.3); }
+        .btn-red {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 12px 28px; border-radius: 999px; border: none; cursor: pointer;
-          background: #C4897A; color: #fff;
-          font-family: 'Inter', system-ui, sans-serif; font-size: 0.875rem;
-          font-weight: 400; transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+          background: #C0392B; color: #fff;
+          font-family: 'Montserrat', sans-serif; font-size: 0.75rem;
+          font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+          transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
         }
-        .btn-rose:hover { background: #A96B5C; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(196,137,122,0.3); }
-        .btn-rose:disabled { opacity: 0.3; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-red:hover { background: #9B2E22; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(192,57,43,0.32); }
+        .btn-red:disabled { opacity: 0.3; cursor: not-allowed; transform: none; box-shadow: none; }
         .btn-ghost {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 10px 16px; border-radius: 8px; border: none; cursor: pointer;
-          background: transparent; color: #B5ABA3;
-          font-family: 'Inter', system-ui, sans-serif; font-size: 0.875rem;
-          font-weight: 300; transition: color 0.2s;
+          background: transparent; color: var(--pale);
+          font-family: 'Montserrat', sans-serif; font-size: 0.8rem;
+          font-weight: 400; transition: color 0.2s;
         }
         .btn-ghost:hover { color: var(--fg); }
         .label-sm {
-          display: block; font-family: 'Inter', system-ui, sans-serif;
-          font-size: 0.68rem; font-weight: 300; color: #B5ABA3;
-          text-transform: uppercase; letter-spacing: 0.18em; margin-bottom: 10px;
+          display: block; font-family: 'Montserrat', sans-serif;
+          font-size: 0.6rem; font-weight: 700; color: var(--pale);
+          text-transform: uppercase; letter-spacing: 0.22em; margin-bottom: 10px;
         }
         .pill-btn {
-          padding: 10px 22px; border-radius: 999px; border: 1.5px solid #D9CEBF;
+          padding: 10px 20px; border-radius: 999px; border: 1.5px solid var(--border);
           background: transparent; color: var(--fg); cursor: pointer;
-          font-family: 'Inter', system-ui, sans-serif; font-size: 0.875rem;
-          font-weight: 300; transition: all 0.18s ease;
+          font-family: 'Montserrat', sans-serif; font-size: 0.8rem;
+          font-weight: 400; transition: all 0.18s ease;
         }
-        .pill-btn:hover { border-color: #C4897A; color: #C4897A; }
-        .pill-btn.ativo { border-color: #C4897A; background: #C4897A; color: #fff; }
-        .dark .pill-btn { border-color: #3D302C; }
-        .dark .pill-btn.ativo { border-color: #C4897A; background: #C4897A; }
+        .pill-btn:hover { border-color: var(--red); color: var(--red); }
+        .pill-btn.ativo { border-color: var(--red); background: var(--red); color: #fff; font-weight: 600; }
+        .dark .pill-btn { border-color: #3A201A; }
         .field-grid { display: grid; gap: 32px; }
         .field-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 24px; }
         @media (max-width: 480px) { .field-grid-2 { grid-template-columns: 1fr; } }
       `}</style>
 
-      {/* Orb decorativo */}
-      <div style={{ position: "fixed", top: 0, right: 0, width: 300, height: 300, borderRadius: "50%", background: "radial-gradient(circle, #E8C4BB 0%, transparent 70%)", filter: "blur(70px)", opacity: 0.12, pointerEvents: "none" }} />
-      <div style={{ position: "fixed", bottom: 100, left: -60, width: 260, height: 260, borderRadius: "50%", background: "radial-gradient(circle, #C4897A 0%, transparent 70%)", filter: "blur(80px)", opacity: 0.07, pointerEvents: "none" }} />
+      {/* Orbs */}
+      <div style={{ position: "fixed", top: -80, right: -80, width: 360, height: 360, borderRadius: "50%", background: "radial-gradient(circle, #F2C8C3 0%, transparent 70%)", filter: "blur(90px)", opacity: 0.45, pointerEvents: "none" }} />
+      <div style={{ position: "fixed", bottom: 40, left: -100, width: 320, height: 320, borderRadius: "50%", background: "radial-gradient(circle, #F5DDD9 0%, transparent 70%)", filter: "blur(100px)", opacity: 0.35, pointerEvents: "none" }} />
 
       {/* Nav */}
-      <nav style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px 32px", borderBottom: "1px solid var(--border)", position: "relative", zIndex: 10 }}>
-        <span style={{ fontSize: "0.7rem", fontFamily: "Inter, system-ui, sans-serif", fontWeight: 300, color: "#B5ABA3", letterSpacing: "0.2em", textTransform: "uppercase" }}>
-          indicapsi
+      <nav style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px 32px", borderBottom: "1px solid var(--border)", position: "relative", zIndex: 10, background: "var(--bg)" }}>
+        <span style={{ fontSize: "0.65rem", fontFamily: "'Montserrat', sans-serif", fontWeight: 800, color: "#C0392B", letterSpacing: "0.3em", textTransform: "uppercase" }}>
+          formspsi
         </span>
         <ThemeToggle />
       </nav>
 
-      {/* Barra de progresso */}
-      <div style={{ height: 2, background: "rgba(196,137,122,0.12)", position: "relative" }}>
-        <div style={{ height: "100%", width: `${pctEtapa(etapa)}%`, background: "linear-gradient(90deg, #C4897A, #A96B5C)", borderRadius: 1, transition: "width 0.6s cubic-bezier(.4,0,.2,1)" }} />
+      {/* Progresso */}
+      <div style={{ height: 3, background: "rgba(192,57,43,0.1)" }}>
+        <div style={{ height: "100%", width: `${pctEtapa(etapa)}%`, background: "linear-gradient(90deg, #C0392B, #9B2E22)", transition: "width 0.6s cubic-bezier(.4,0,.2,1)" }} />
       </div>
 
       {/* Conteúdo */}
@@ -246,19 +230,19 @@ export default function ProntuarioPage() {
   );
 }
 
-/* ─── COMPONENTES AUXILIARES ─── */
+/* ─── AUXILIARES ─── */
 
 function Divisor() {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 28 }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 28 }}>
       <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
-      <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#C4897A" }} />
+      <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#C0392B" }} />
       <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
     </div>
   );
 }
 
-function NavButtons({ onVoltar, onAvancar, desabilitado, labelAvancar = "continuar" }: {
+function NavButtons({ onVoltar, onAvancar, desabilitado, labelAvancar = "Continuar" }: {
   onVoltar?: () => void;
   onAvancar: () => void;
   desabilitado?: boolean;
@@ -268,10 +252,10 @@ function NavButtons({ onVoltar, onAvancar, desabilitado, labelAvancar = "continu
     <div style={{ display: "flex", alignItems: "center", justifyContent: onVoltar ? "space-between" : "flex-end", marginTop: 48 }}>
       {onVoltar && (
         <button className="btn-ghost" onClick={onVoltar}>
-          <ChevronLeft size={16} strokeWidth={1.5} />voltar
+          <ChevronLeft size={16} strokeWidth={1.5} />Voltar
         </button>
       )}
-      <button className="btn-rose" onClick={onAvancar} disabled={desabilitado}>
+      <button className="btn-red" onClick={onAvancar} disabled={desabilitado}>
         {labelAvancar} <ChevronRight size={16} strokeWidth={1.5} />
       </button>
     </div>
@@ -293,30 +277,32 @@ function EtapaIntro({ onAvancar }: { onAvancar: () => void }) {
   return (
     <div style={{ textAlign: "center" }}>
       <Divisor />
-      <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontWeight: 300, fontSize: "0.7rem", color: "#B5ABA3", textTransform: "uppercase", letterSpacing: "0.2em", marginBottom: 24 }}>
+      <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: "0.6rem", color: "#C0392B", textTransform: "uppercase", letterSpacing: "0.28em", marginBottom: 20 }}>
         prontuário psicológico
       </p>
-      <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic", fontWeight: 400, fontSize: "clamp(1.8rem, 4vw, 2.5rem)", color: "var(--fg)", lineHeight: 1.25, marginBottom: 28 }}>
+      <h2 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: "clamp(1.6rem, 4vw, 2.4rem)", color: "var(--fg)", lineHeight: 1.2, marginBottom: 28 }}>
         Cadastro de Prontuário
       </h2>
 
-      <div style={{ background: "var(--cream)", borderRadius: 16, padding: "24px 28px", marginBottom: 36, textAlign: "left" }}>
-        <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontWeight: 300, fontSize: "0.9rem", color: "var(--muted)", lineHeight: 1.85, margin: 0 }}>
-          De acordo com a Resolução 001/2009 do Conselho Federal de Psicologia, toda sessão de psicoterapia
-          deve ser documentada em um prontuário do paciente.
+      <div style={{ background: "var(--cream)", borderRadius: 16, padding: "24px 28px", marginBottom: 36, textAlign: "left", border: "1px solid var(--border)" }}>
+        <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 300, fontSize: "0.88rem", color: "var(--muted)", lineHeight: 1.9, margin: 0 }}>
+          De acordo com a <strong style={{ fontWeight: 600, color: "var(--fg)" }}>Resolução 001/2009</strong> do Conselho Federal de Psicologia,
+          toda sessão de psicoterapia deve ser documentada em um prontuário do paciente.
         </p>
-        <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontWeight: 300, fontSize: "0.9rem", color: "var(--muted)", lineHeight: 1.85, margin: "12px 0 0" }}>
-          As informações preenchidas aqui são <em style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>confidenciais</em> e
+        <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 300, fontSize: "0.88rem", color: "var(--muted)", lineHeight: 1.9, margin: "12px 0 0" }}>
+          As informações preenchidas aqui são <strong style={{ fontWeight: 600, color: "var(--fg)" }}>confidenciais</strong> e
           utilizadas exclusivamente para compor o prontuário psicológico.
         </p>
-        <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic", fontSize: "0.85rem", color: "#C4897A", margin: "16px 0 0" }}>
-          Letícia Bittencourt Reis — CRP 06/189562
-        </p>
+        <div style={{ marginTop: 18, paddingTop: 16, borderTop: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#C0392B", flexShrink: 0 }} />
+          <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 600, fontSize: "0.8rem", color: "#C0392B", margin: 0 }}>
+            Letícia Bittencourt Reis — CRP 06/189562
+          </p>
+        </div>
       </div>
 
       <button className="btn-primary" onClick={onAvancar}>
-        Preencher cadastro
-        <ArrowRight size={15} strokeWidth={1.5} />
+        Preencher cadastro <ArrowRight size={15} strokeWidth={2} />
       </button>
     </div>
   );
@@ -329,44 +315,38 @@ function EtapaIdentificacao({ form, setForm, onAvancar, onVoltar }: {
   onVoltar: () => void;
 }) {
   const set = (k: keyof ProntuarioForm) => (v: string) => setForm(f => ({ ...f, [k]: v }));
-
   const GENEROS = ["Feminino", "Masculino", "Não-binário", "Prefiro não dizer"];
   const ESTADOS_CIVIS = ["Solteiro(a)", "Casado(a)", "Divorciado(a)", "Viúvo(a)", "União estável"];
 
   return (
     <div>
-      <p className="label-sm" style={{ textAlign: "center", marginBottom: 8 }}>01 — identificação</p>
-      <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic", fontWeight: 400, fontSize: "1.5rem", color: "var(--fg)", textAlign: "center", marginBottom: 36 }}>
+      <p className="label-sm" style={{ textAlign: "center", marginBottom: 4 }}>01 — identificação</p>
+      <h3 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: "1.4rem", color: "var(--fg)", textAlign: "center", marginBottom: 36 }}>
         Quem é você?
       </h3>
-
       <div className="field-grid">
         <Campo label="Nome Completo / Nome Social">
-          <input className="pron-input" type="text" value={form.nome} onChange={e => set("nome")(e.target.value)} placeholder="Seu nome..." autoFocus />
+          <input className="pron-input" type="text" value={form.nome} onChange={e => set("nome")(e.target.value)} placeholder="Seu nome completo..." autoFocus />
         </Campo>
-
         <Campo label="Data de Nascimento">
           <input className="pron-input" type="text" value={form.data_nascimento} onChange={e => set("data_nascimento")(e.target.value)} placeholder="DD/MM/AAAA" inputMode="numeric" />
         </Campo>
-
         <Campo label="Gênero / Identidade de Gênero">
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 8 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
             {GENEROS.map(g => (
               <button key={g} className={`pill-btn${form.genero === g ? " ativo" : ""}`} onClick={() => set("genero")(g)}>{g}</button>
             ))}
           </div>
           <input className="pron-input" type="text" value={GENEROS.includes(form.genero) ? "" : form.genero} onChange={e => set("genero")(e.target.value)} placeholder="Outro..." style={{ marginTop: 12 }} />
         </Campo>
-
         <Campo label="Estado Civil">
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 8 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
             {ESTADOS_CIVIS.map(e => (
               <button key={e} className={`pill-btn${form.estado_civil === e ? " ativo" : ""}`} onClick={() => set("estado_civil")(e)}>{e}</button>
             ))}
           </div>
         </Campo>
       </div>
-
       <NavButtons onVoltar={onVoltar} onAvancar={onAvancar} desabilitado={!form.nome.trim()} />
     </div>
   );
@@ -382,34 +362,29 @@ function EtapaContato({ form, setForm, onAvancar, onVoltar }: {
 
   return (
     <div>
-      <p className="label-sm" style={{ textAlign: "center", marginBottom: 8 }}>02 — contato e localização</p>
-      <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic", fontWeight: 400, fontSize: "1.5rem", color: "var(--fg)", textAlign: "center", marginBottom: 36 }}>
+      <p className="label-sm" style={{ textAlign: "center", marginBottom: 4 }}>02 — contato e localização</p>
+      <h3 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: "1.4rem", color: "var(--fg)", textAlign: "center", marginBottom: 36 }}>
         Como encontrar você?
       </h3>
-
       <div className="field-grid">
         <Campo label="CPF">
           <input className="pron-input" type="text" value={form.cpf} onChange={e => set("cpf")(e.target.value)} placeholder="000.000.000-00" inputMode="numeric" />
         </Campo>
-
         <Campo label="Endereço">
           <input className="pron-input" type="text" value={form.endereco} onChange={e => set("endereco")(e.target.value)} placeholder="Rua, número, bairro..." />
         </Campo>
-
         <div className="field-grid-2">
           <Campo label="Cidade e Estado">
             <input className="pron-input" type="text" value={form.cidade_estado} onChange={e => set("cidade_estado")(e.target.value)} placeholder="São Paulo, SP" />
           </Campo>
-          <Campo label="Contato (WhatsApp)">
+          <Campo label="WhatsApp">
             <input className="pron-input" type="text" value={form.whatsapp} onChange={e => set("whatsapp")(e.target.value)} placeholder="(11) 99999-9999" inputMode="tel" />
           </Campo>
         </div>
-
         <Campo label="E-mail">
           <input className="pron-input" type="email" value={form.email} onChange={e => set("email")(e.target.value)} placeholder="seu@email.com" inputMode="email" />
         </Campo>
       </div>
-
       <NavButtons onVoltar={onVoltar} onAvancar={onAvancar} />
     </div>
   );
@@ -426,16 +401,14 @@ function EtapaProfissao({ form, setForm, onAvancar, onVoltar }: {
 
   return (
     <div>
-      <p className="label-sm" style={{ textAlign: "center", marginBottom: 8 }}>03 — sobre você</p>
-      <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic", fontWeight: 400, fontSize: "1.5rem", color: "var(--fg)", textAlign: "center", marginBottom: 36 }}>
+      <p className="label-sm" style={{ textAlign: "center", marginBottom: 4 }}>03 — sobre você</p>
+      <h3 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: "1.4rem", color: "var(--fg)", textAlign: "center", marginBottom: 36 }}>
         Sua vida e preferências
       </h3>
-
       <div className="field-grid">
         <Campo label="Profissão">
           <input className="pron-input" type="text" value={form.profissao} onChange={e => set("profissao")(e.target.value)} placeholder="O que você faz?" autoFocus />
         </Campo>
-
         <Campo label="Modalidade de Atendimento">
           <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
             {MODALIDADES.map(m => (
@@ -447,8 +420,7 @@ function EtapaProfissao({ form, setForm, onAvancar, onVoltar }: {
           </div>
         </Campo>
       </div>
-
-      <NavButtons onVoltar={onVoltar} onAvancar={onAvancar} desabilitado={!form.profissao.trim() && !form.modalidade} />
+      <NavButtons onVoltar={onVoltar} onAvancar={onAvancar} />
     </div>
   );
 }
@@ -460,35 +432,23 @@ function EtapaSaude({ form, setForm, onAvancar, onVoltar }: {
   onVoltar: () => void;
 }) {
   const set = (k: keyof ProntuarioForm) => (v: string) => setForm(f => ({ ...f, [k]: v }));
-
   const usaMedicacao = form.medicacao.startsWith("Sim");
   const descMedicacao = usaMedicacao ? form.medicacao.replace(/^Sim[,:]?\s*/i, "") : "";
 
-  const toggleMed = (v: "sim" | "nao") => {
-    if (v === "sim") set("medicacao")("Sim — ");
-    else set("medicacao")("Não");
-  };
-
   return (
     <div>
-      <p className="label-sm" style={{ textAlign: "center", marginBottom: 8 }}>04 — saúde</p>
-      <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic", fontWeight: 400, fontSize: "1.5rem", color: "var(--fg)", textAlign: "center", marginBottom: 36 }}>
+      <p className="label-sm" style={{ textAlign: "center", marginBottom: 4 }}>04 — saúde</p>
+      <h3 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: "1.4rem", color: "var(--fg)", textAlign: "center", marginBottom: 36 }}>
         Um pouco sobre sua saúde
       </h3>
-
       <div className="field-grid">
         <Campo label="Faz uso de medicação psiquiátrica?">
           <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
-            <button className={`pill-btn${usaMedicacao ? " ativo" : ""}`} onClick={() => toggleMed("sim")}
-              style={{ flex: 1, textAlign: "center", padding: "14px 8px" }}>
-              Sim
-            </button>
-            <button className={`pill-btn${form.medicacao === "Não" ? " ativo" : ""}`} onClick={() => toggleMed("nao")}
-              style={{ flex: 1, textAlign: "center", padding: "14px 8px" }}>
-              Não
-            </button>
+            <button className={`pill-btn${usaMedicacao ? " ativo" : ""}`} onClick={() => set("medicacao")("Sim — ")}
+              style={{ flex: 1, textAlign: "center", padding: "14px 8px" }}>Sim</button>
+            <button className={`pill-btn${form.medicacao === "Não" ? " ativo" : ""}`} onClick={() => set("medicacao")("Não")}
+              style={{ flex: 1, textAlign: "center", padding: "14px 8px" }}>Não</button>
           </div>
-
           {usaMedicacao && (
             <div style={{ marginTop: 20 }}>
               <label className="label-sm">Qual medicação?</label>
@@ -504,7 +464,6 @@ function EtapaSaude({ form, setForm, onAvancar, onVoltar }: {
           )}
         </Campo>
       </div>
-
       <NavButtons onVoltar={onVoltar} onAvancar={onAvancar} desabilitado={!form.medicacao} />
     </div>
   );
@@ -520,14 +479,13 @@ function EtapaMotivo({ form, setForm, onAvancar, onVoltar }: {
 
   return (
     <div>
-      <p className="label-sm" style={{ textAlign: "center", marginBottom: 8 }}>05 — motivo</p>
-      <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic", fontWeight: 400, fontSize: "clamp(1.4rem, 3.5vw, 1.9rem)", color: "var(--fg)", textAlign: "center", lineHeight: 1.3, marginBottom: 12 }}>
+      <p className="label-sm" style={{ textAlign: "center", marginBottom: 4 }}>05 — motivo</p>
+      <h3 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: "clamp(1.3rem, 3vw, 1.7rem)", color: "var(--fg)", textAlign: "center", lineHeight: 1.3, marginBottom: 10 }}>
         O que te trouxe até aqui?
       </h3>
-      <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontWeight: 300, fontSize: "0.82rem", color: "#B5ABA3", textAlign: "center", marginBottom: 28 }}>
+      <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 300, fontSize: "0.82rem", color: "var(--muted)", textAlign: "center", marginBottom: 28 }}>
         Pode começar de onde quiser. Não há resposta certa.
       </p>
-
       <textarea
         className="pron-textarea"
         value={form.motivo}
@@ -536,8 +494,7 @@ function EtapaMotivo({ form, setForm, onAvancar, onVoltar }: {
         rows={9}
         autoFocus
       />
-
-      <NavButtons onVoltar={onVoltar} onAvancar={onAvancar} labelAvancar="finalizar" desabilitado={!form.motivo.trim()} />
+      <NavButtons onVoltar={onVoltar} onAvancar={onAvancar} labelAvancar="Finalizar" desabilitado={!form.motivo.trim()} />
     </div>
   );
 }
@@ -545,10 +502,10 @@ function EtapaMotivo({ form, setForm, onAvancar, onVoltar }: {
 function EtapaFinalizando() {
   return (
     <div style={{ textAlign: "center", padding: "60px 0" }}>
-      <div style={{ width: 44, height: 44, borderRadius: "50%", border: "1.5px solid #C4897A", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px", animation: "breathe 2s ease-in-out infinite" }}>
-        <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#C4897A", animation: "breathe 2s ease-in-out infinite 0.4s" }} />
+      <div style={{ width: 48, height: 48, borderRadius: "50%", border: "2px solid #C0392B", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px", animation: "breathe 2s ease-in-out infinite" }}>
+        <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#C0392B", animation: "breathe 2s ease-in-out infinite 0.4s" }} />
       </div>
-      <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontWeight: 300, fontSize: "0.9rem", color: "var(--muted)" }}>
+      <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 300, fontSize: "0.9rem", color: "var(--muted)" }}>
         Guardando seu cadastro com cuidado...
       </p>
     </div>
@@ -562,18 +519,17 @@ function EtapaConcluido({ nome, onVer }: { nome: string; onVer: () => void }) {
   return (
     <div style={{ textAlign: "center", opacity: show ? 1 : 0, transform: show ? "translateY(0)" : "translateY(20px)", transition: "opacity 0.8s ease, transform 0.8s ease" }}>
       <Divisor />
-      <div style={{ width: 52, height: 52, borderRadius: "50%", background: "linear-gradient(135deg, #C4897A, #A96B5C)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 28px" }}>
-        <Check size={22} strokeWidth={1.5} color="#fff" />
+      <div style={{ width: 56, height: 56, borderRadius: "50%", background: "linear-gradient(135deg, #C0392B, #9B2E22)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 28px" }}>
+        <Check size={24} strokeWidth={2.5} color="#fff" />
       </div>
-      <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic", fontWeight: 400, fontSize: "clamp(1.7rem, 4vw, 2.4rem)", color: "var(--fg)", lineHeight: 1.3, marginBottom: 16 }}>
-        Cadastro recebido{primeiro ? `, ${primeiro}` : ""}.
+      <h2 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: "clamp(1.6rem, 4vw, 2.2rem)", color: "var(--fg)", lineHeight: 1.25, marginBottom: 16 }}>
+        Cadastro recebido{primeiro ? `, ${primeiro}` : ""}!
       </h2>
-      <p style={{ fontFamily: "Inter, system-ui, sans-serif", fontWeight: 300, fontSize: "0.92rem", color: "var(--muted)", marginBottom: 48, lineHeight: 1.8 }}>
-        Obrigada por confiar.{" "}
-        <em style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Nos vemos em breve.</em>
+      <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 300, fontSize: "0.92rem", color: "var(--muted)", marginBottom: 48, lineHeight: 1.8 }}>
+        Obrigada por confiar. Nos vemos em breve.
       </p>
       <button className="btn-primary" onClick={onVer}>
-        Ver meu prontuário <ArrowRight size={15} strokeWidth={1.5} />
+        Ver meu prontuário <ArrowRight size={15} strokeWidth={2} />
       </button>
     </div>
   );
