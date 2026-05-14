@@ -11,16 +11,16 @@ const config: Config = {
     extend: {
       colors: {
         cream: {
-          50:  "#FDFCFA",
-          100: "#FAF9F7",
-          200: "#F5F1EC",
-          300: "#EDE6DC",
+          50:  "#FDF7EE",
+          100: "#F9F0E2",
+          200: "#F3E2CC",
+          300: "#EAD4B4",
         },
         beige: {
-          100: "#F0EBE3",
-          200: "#E8DDD1",
-          300: "#D9CEBF",
-          400: "#C9BAA7",
+          100: "#EFE0CA",
+          200: "#E8D5B8",
+          300: "#D9C4A2",
+          400: "#C9B08C",
         },
         rose: {
           warm: "#C4897A",

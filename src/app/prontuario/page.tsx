@@ -116,9 +116,9 @@ export default function ProntuarioPage() {
     <main style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "var(--bg)", position: "relative" }}>
       <style>{`
         :root {
-          --bg: #F7EFE4; --fg: #2A1A12; --muted: #8A7870;
-          --border: #E2CEB8; --red: #8B1A2E; --red-deep: #6B1222;
-          --cream: #EEE0CE; --pale: #B0A090;
+          --bg: #F3E2CC; --fg: #2A1612; --muted: #8A7060;
+          --border: #E0C8A8; --red: #8B1A2E; --red-deep: #6B1222;
+          --cream: #EDD5B5; --pale: #B09880;
         }
         .dark {
           --bg: #180E09; --fg: #F0E5D8; --muted: #8A7870;
@@ -127,7 +127,7 @@ export default function ProntuarioPage() {
         }
         .pron-input {
           width: 100%; background: transparent;
-          border: none; border-bottom: 1.5px solid #D9CBBF;
+          border: none; border-bottom: 1.5px solid #D4B898;
           color: var(--fg); padding: 12px 0; font-size: 1rem;
           font-family: 'Montserrat', sans-serif; font-weight: 300;
           transition: border-color 0.2s;

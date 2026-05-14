@@ -105,9 +105,9 @@ export default function DashboardPage() {
     <div style={{ minHeight: "100vh", background: "var(--dash-bg)", display: "flex", flexDirection: "column" }}>
       <style>{`
         :root {
-          --dash-bg: #F2E8D8; --dash-surface: #F9F2E5; --dash-border: #E2CEB8;
-          --dash-muted: #8A7870; --dash-fg: #2A1A12; --dash-red: #8B1A2E;
-          --dash-red-deep: #6B1222; --dash-card: #FDF8F0; --dash-pale: #B0A090;
+          --dash-bg: #F0DEC8; --dash-surface: #F7EDD8; --dash-border: #E0C8A8;
+          --dash-muted: #8A7060; --dash-fg: #2A1612; --dash-red: #8B1A2E;
+          --dash-red-deep: #6B1222; --dash-card: #FBF3E4; --dash-pale: #B09880;
         }
         .dark {
           --dash-bg: #130A05; --dash-surface: #1A1008; --dash-border: #3A200F;
@@ -130,7 +130,7 @@ export default function DashboardPage() {
           cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
         }
         .dash-card:hover {
-          border-color: #D9CBBF; box-shadow: 0 4px 24px rgba(139,26,46,0.07);
+          border-color: #D4B898; box-shadow: 0 4px 24px rgba(139,26,46,0.07);
           transform: translateY(-1px);
         }
         .dark .dash-card:hover { border-color: #4A2820; }

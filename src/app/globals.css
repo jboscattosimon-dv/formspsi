@@ -10,8 +10,8 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-main);
-  background-color: #F7EFE4;
-  color: #2A1A12;
+  background-color: #F3E2CC;
+  color: #2A1612;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

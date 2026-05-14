@@ -209,7 +209,7 @@ export default function ProntuarioViewPage() {
   };
 
   if (!dados) return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#F7EFE4" }}>
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#F3E2CC" }}>
       <div style={{ width: 36, height: 36, borderRadius: "50%", border: "2px solid #8B1A2E", display: "flex", alignItems: "center", justifyContent: "center", animation: "breathe 2s ease-in-out infinite" }}>
         <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#8B1A2E" }} />
       </div>
@@ -223,7 +223,7 @@ export default function ProntuarioViewPage() {
   return (
     <div style={{ minHeight: "100vh", background: "var(--pv-bg)" }}>
       <style>{`
-        :root { --pv-bg:#F2E8D8; --pv-surface:#FAF3E8; --pv-border:#E2CEB8; --pv-fg:#2A1A12; --pv-muted:#8A7870; --pv-pale:#B0A090; --pv-red:#8B1A2E; --pv-doc:#FDF8F0; }
+        :root { --pv-bg:#F0DEC8; --pv-surface:#F7EDD8; --pv-border:#E0C8A8; --pv-fg:#2A1612; --pv-muted:#8A7060; --pv-pale:#B09880; --pv-red:#8B1A2E; --pv-doc:#FBF3E4; }
         .dark { --pv-bg:#130A05; --pv-surface:#1A1008; --pv-border:#3A200F; --pv-fg:#F0E5D8; --pv-muted:#6A5A4A; --pv-pale:#4A3828; --pv-red:#A8263C; --pv-doc:#180E09; }
         * { font-family: 'Montserrat', sans-serif; }
         .pv-toolbar { position:sticky; top:0; z-index:50; background:var(--pv-surface); border-bottom:1.5px solid var(--pv-border); }

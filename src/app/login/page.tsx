@@ -38,7 +38,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-[#FAF9F7] dark:bg-[#1A1614] px-6 relative">
+    <main className="min-h-screen flex items-center justify-center bg-[#F3E2CC] dark:bg-[#1A1614] px-6 relative">
       {/* Orb */}
       <div
         className="pointer-events-none absolute top-0 right-0 w-[350px] h-[350px] opacity-15 dark:opacity-8"
