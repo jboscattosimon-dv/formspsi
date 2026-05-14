@@ -85,3 +85,37 @@ export async function deletarProntuario(id: string) {
   const { error } = await supabase.from("prontuarios").delete().eq("id", id);
   if (error) throw error;
 }
+
+export interface IndicacaoRow {
+  id: string;
+  tipo: "livro" | "serie" | "filme";
+  titulo: string;
+  autor?: string;
+  notas?: string;
+  paciente?: string;
+  criado_em?: string;
+}
+
+export async function listarIndicacoes() {
+  const { data, error } = await supabase
+    .from("indicacoes")
+    .select("*")
+    .order("criado_em", { ascending: false });
+  if (error) throw error;
+  return data as IndicacaoRow[];
+}
+
+export async function salvarIndicacao(ind: IndicacaoRow) {
+  const { data, error } = await supabase
+    .from("indicacoes")
+    .upsert(ind)
+    .select()
+    .single();
+  if (error) throw error;
+  return data as IndicacaoRow;
+}
+
+export async function deletarIndicacao(id: string) {
+  const { error } = await supabase.from("indicacoes").delete().eq("id", id);
+  if (error) throw error;
+}

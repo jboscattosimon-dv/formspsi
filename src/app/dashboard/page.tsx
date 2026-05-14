@@ -199,10 +199,10 @@ export default function DashboardPage() {
               <Plus size={15} strokeWidth={1.5} />
               Novo prontuário
             </button>
-            <button className="nav-link" onClick={() => router.push("/indicacoes")}>
+            <a href="/indicacoes" className="nav-link" style={{ textDecoration: "none" }}>
               <BookOpen size={15} strokeWidth={1.5} />
               Indicações
-            </button>
+            </a>
           </nav>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>

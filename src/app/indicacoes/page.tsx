@@ -1,30 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { BookOpen, Tv, Film, Plus, X, Check, Trash2, ArrowLeft } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { Plus, BookOpen, Tv, Film, Trash2, FileText, LogOut, X, Check, ChevronDown } from "lucide-react";
+import { listarIndicacoes, salvarIndicacao, deletarIndicacao, type IndicacaoRow } from "@/lib/supabase";
 
 type Tipo = "livro" | "serie" | "filme";
 type Filtro = "todos" | Tipo;
-
-interface Indicacao {
-  id: string;
-  tipo: Tipo;
-  titulo: string;
-  autor: string;
-  notas: string;
-  paciente: string;
-  criado_em: string;
-}
-
-const VAZIO: Omit<Indicacao, "id" | "criado_em"> = {
-  tipo: "livro",
-  titulo: "",
-  autor: "",
-  notas: "",
-  paciente: "",
-};
 
 const TIPO_LABEL: Record<Tipo, string> = { livro: "Livro", serie: "Série", filme: "Filme" };
 const TIPO_ICON: Record<Tipo, React.ReactNode> = {
@@ -34,63 +16,64 @@ const TIPO_ICON: Record<Tipo, React.ReactNode> = {
 };
 const TIPO_COLOR: Record<Tipo, string> = {
   livro: "#8B1A2E",
-  serie: "#5A6B8B",
-  filme: "#3D6B4F",
+  serie: "#4A6080",
+  filme: "#3D6450",
 };
+
+const VAZIO = { tipo: "livro" as Tipo, titulo: "", autor: "", notas: "", paciente: "" };
 
 function formatData(iso: string) {
   return new Date(iso).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" });
 }
 
 export default function IndicacoesPage() {
-  const router = useRouter();
-  const [lista, setLista] = useState<Indicacao[]>([]);
+  const [lista, setLista] = useState<IndicacaoRow[]>([]);
   const [filtro, setFiltro] = useState<Filtro>("todos");
   const [show, setShow] = useState(false);
+  const [isPsi, setIsPsi] = useState(false);
   const [modalAberto, setModalAberto] = useState(false);
   const [form, setForm] = useState({ ...VAZIO });
   const [salvando, setSalvando] = useState(false);
   const [deletandoId, setDeletandoId] = useState<string | null>(null);
+  const [carregando, setCarregando] = useState(true);
 
   useEffect(() => {
     const auth = localStorage.getItem("formspsi-auth");
-    if (!auth) { router.push("/login"); return; }
-    const salvo = JSON.parse(localStorage.getItem("formspsi-indicacoes") || "[]");
-    setLista(salvo);
-    setTimeout(() => setShow(true), 80);
-  }, [router]);
+    if (auth) setIsPsi(true);
 
-  const salvar = () => {
+    listarIndicacoes()
+      .then(data => { setLista(data); })
+      .catch(() => {})
+      .finally(() => {
+        setCarregando(false);
+        setTimeout(() => setShow(true), 80);
+      });
+  }, []);
+
+  const salvar = async () => {
     if (!form.titulo.trim()) return;
     setSalvando(true);
-    setTimeout(() => {
-      const nova: Indicacao = {
+    try {
+      const nova: IndicacaoRow = {
         ...form,
         id: crypto.randomUUID(),
         criado_em: new Date().toISOString(),
       };
-      const atualizada = [nova, ...lista];
-      setLista(atualizada);
-      localStorage.setItem("formspsi-indicacoes", JSON.stringify(atualizada));
+      const salva = await salvarIndicacao(nova);
+      setLista(prev => [salva, ...prev]);
       setForm({ ...VAZIO });
       setModalAberto(false);
-      setSalvando(false);
-    }, 400);
+    } catch {}
+    setSalvando(false);
   };
 
-  const deletar = (id: string) => {
+  const deletar = async (id: string) => {
     setDeletandoId(id);
-    setTimeout(() => {
-      const nova = lista.filter(i => i.id !== id);
-      setLista(nova);
-      localStorage.setItem("formspsi-indicacoes", JSON.stringify(nova));
-      setDeletandoId(null);
-    }, 300);
-  };
-
-  const sair = () => {
-    localStorage.removeItem("formspsi-auth");
-    router.push("/login");
+    try {
+      await deletarIndicacao(id);
+      setLista(prev => prev.filter(i => i.id !== id));
+    } catch {}
+    setDeletandoId(null);
   };
 
   const filtradas = filtro === "todos" ? lista : lista.filter(i => i.tipo === filtro);
@@ -102,284 +85,257 @@ export default function IndicacoesPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--dash-bg)", display: "flex", flexDirection: "column" }}>
+    <main style={{ minHeight: "100vh", background: "var(--bg)", display: "flex", flexDirection: "column" }}>
       <style>{`
         :root {
-          --dash-bg: #FAF5EE; --dash-surface: #FDF9F4; --dash-border: #E8DDD0;
-          --dash-muted: #6E6258; --dash-fg: #1A1410; --dash-red: #8B1A2E;
-          --dash-red-deep: #6B1222; --dash-card: #FEFCF8; --dash-pale: #A89888;
+          --bg: #FAF5EE; --fg: #1A1410; --muted: #6E6258;
+          --border: #E8DDD0; --red: #8B1A2E; --red-deep: #6B1222;
+          --surface: #FDF9F4; --card: #FEFCF8; --pale: #A89888;
         }
         .dark {
-          --dash-bg: #0F0F0F; --dash-surface: #1A1A1A; --dash-border: #2E2E2E;
-          --dash-muted: #666666; --dash-fg: #EEEEEE; --dash-red: #A8263C;
-          --dash-red-deep: #8B1A2E; --dash-card: #222222; --dash-pale: #444444;
+          --bg: #0F0F0F; --fg: #EEEEEE; --muted: #666666;
+          --border: #2E2E2E; --red: #A8263C; --red-deep: #8B1A2E;
+          --surface: #1A1A1A; --card: #222222; --pale: #444444;
         }
         * { font-family: 'Montserrat', sans-serif; }
-        .nav-link {
-          display: flex; align-items: center; gap: 10px;
-          padding: 10px 14px; border-radius: 10px; border: none;
-          background: transparent; cursor: pointer; width: 100%;
-          font-size: 0.82rem; font-family: 'Montserrat', sans-serif; font-weight: 400;
-          color: var(--dash-muted); transition: all 0.18s; text-align: left;
-        }
-        .nav-link:hover { background: var(--dash-bg); color: var(--dash-fg); }
-        .nav-link.active { background: rgba(139,26,46,0.08); color: var(--dash-red); font-weight: 600; }
         .btn-novo {
           display: inline-flex; align-items: center; gap: 8px;
-          background: #8B1A2E; color: #fff; border: none; border-radius: 12px;
-          padding: 11px 22px; font-size: 0.8rem;
-          font-family: 'Montserrat', sans-serif; font-weight: 600;
+          background: var(--red); color: #fff; border: none; border-radius: 12px;
+          padding: 11px 22px; font-size: 0.8rem; font-weight: 600;
           letter-spacing: 0.06em; cursor: pointer; white-space: nowrap;
           transition: background 0.2s, box-shadow 0.2s;
         }
-        .btn-novo:hover { background: #6B1222; box-shadow: 0 4px 16px rgba(139,26,46,0.25); }
+        .btn-novo:hover { background: var(--red-deep); box-shadow: 0 4px 16px rgba(139,26,46,0.25); }
         .filtro-btn {
           display: inline-flex; align-items: center; gap: 6px;
-          padding: 7px 14px; border-radius: 20px; border: 1.5px solid var(--dash-border);
-          background: transparent; font-size: 0.75rem; font-family: 'Montserrat', sans-serif;
-          font-weight: 500; color: var(--dash-muted); cursor: pointer; transition: all 0.18s;
+          padding: 7px 14px; border-radius: 20px; border: 1.5px solid var(--border);
+          background: transparent; font-size: 0.75rem; font-weight: 500;
+          color: var(--muted); cursor: pointer; transition: all 0.18s;
         }
-        .filtro-btn:hover { border-color: var(--dash-red); color: var(--dash-fg); }
-        .filtro-btn.active { background: rgba(139,26,46,0.08); border-color: var(--dash-red); color: var(--dash-red); font-weight: 600; }
+        .filtro-btn:hover { border-color: var(--red); color: var(--fg); }
+        .filtro-btn.ativo { background: rgba(139,26,46,0.08); border-color: var(--red); color: var(--red); font-weight: 600; }
         .ind-card {
-          background: var(--dash-card); border: 1.5px solid var(--dash-border);
-          border-radius: 16px; padding: 20px 24px;
+          background: var(--card); border: 1.5px solid var(--border);
+          border-radius: 16px; padding: 22px 24px;
           transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
         }
-        .ind-card:hover { border-color: #D8D0C8; box-shadow: 0 4px 24px rgba(139,26,46,0.07); transform: translateY(-1px); }
-        .dark .ind-card:hover { border-color: #3A3A3A; }
+        .ind-card:hover { box-shadow: 0 4px 24px rgba(139,26,46,0.07); transform: translateY(-1px); }
         .icon-btn {
-          width: 32px; height: 32px; border-radius: 8px; border: none;
+          width: 30px; height: 30px; border-radius: 8px; border: none;
           display: flex; align-items: center; justify-content: center;
-          background: transparent; cursor: pointer; color: var(--dash-pale);
+          background: transparent; cursor: pointer; color: var(--pale);
           transition: color 0.2s, background 0.2s;
         }
-        .icon-btn.danger:hover { color: #E53935; background: rgba(229,57,53,0.08); }
+        .icon-btn:hover { color: #E53935; background: rgba(229,57,53,0.08); }
         .modal-overlay {
-          position: fixed; inset: 0; background: rgba(0,0,0,0.35);
-          backdrop-filter: blur(4px); z-index: 100;
+          position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+          backdrop-filter: blur(5px); z-index: 100;
           display: flex; align-items: center; justify-content: center; padding: 24px;
         }
         .modal-box {
-          background: var(--dash-surface); border: 1.5px solid var(--dash-border);
-          border-radius: 20px; padding: 36px; width: 100%; max-width: 520px;
-          box-shadow: 0 24px 80px rgba(0,0,0,0.18);
+          background: var(--surface); border: 1.5px solid var(--border);
+          border-radius: 20px; padding: 36px; width: 100%; max-width: 500px;
+          box-shadow: 0 24px 80px rgba(0,0,0,0.2);
         }
         .field-label {
-          font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
-          text-transform: uppercase; color: var(--dash-muted); margin-bottom: 8px; display: block;
+          font-size: 0.68rem; font-weight: 600; letter-spacing: 0.14em;
+          text-transform: uppercase; color: var(--muted); margin-bottom: 8px; display: block;
         }
         .field-input {
-          width: 100%; background: var(--dash-bg);
-          border: 1.5px solid var(--dash-border); border-radius: 10px;
-          padding: 11px 14px; font-size: 0.88rem; font-family: 'Montserrat', sans-serif;
-          font-weight: 300; color: var(--dash-fg); outline: none; transition: border-color 0.2s;
+          width: 100%; background: var(--bg); border: 1.5px solid var(--border);
+          border-radius: 10px; padding: 11px 14px; font-size: 0.88rem;
+          font-weight: 300; color: var(--fg); outline: none; transition: border-color 0.2s;
+          font-family: 'Montserrat', sans-serif;
         }
-        .field-input:focus { border-color: var(--dash-red); }
-        .field-input::placeholder { color: var(--dash-pale); }
+        .field-input:focus { border-color: var(--red); }
+        .field-input::placeholder { color: var(--pale); }
         .tipo-btn {
           flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px;
-          padding: 10px 8px; border-radius: 10px; border: 1.5px solid var(--dash-border);
-          background: var(--dash-bg); font-size: 0.78rem; font-family: 'Montserrat', sans-serif;
-          font-weight: 500; color: var(--dash-muted); cursor: pointer; transition: all 0.18s;
+          padding: 10px 8px; border-radius: 10px; border: 1.5px solid var(--border);
+          background: var(--bg); font-size: 0.78rem; font-weight: 500;
+          color: var(--muted); cursor: pointer; transition: all 0.18s;
         }
-        .tipo-btn.active-livro { border-color: #8B1A2E; background: rgba(139,26,46,0.07); color: #8B1A2E; }
-        .tipo-btn.active-serie { border-color: #5A6B8B; background: rgba(90,107,139,0.07); color: #5A6B8B; }
-        .tipo-btn.active-filme { border-color: #3D6B4F; background: rgba(61,107,79,0.07); color: #3D6B4F; }
+        .tipo-livro { border-color: #8B1A2E; background: rgba(139,26,46,0.07); color: #8B1A2E; }
+        .tipo-serie { border-color: #4A6080; background: rgba(74,96,128,0.07); color: #4A6080; }
+        .tipo-filme { border-color: #3D6450; background: rgba(61,100,80,0.07); color: #3D6450; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
       `}</style>
 
-      <div style={{ display: "flex", minHeight: "100vh" }}>
+      {/* HEADER */}
+      <header style={{ background: "var(--surface)", borderBottom: "1.5px solid var(--border)", padding: "0 40px", height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 50 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+            <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#8B1A2E" }} />
+            <span style={{ fontSize: "0.6rem", letterSpacing: "0.28em", textTransform: "uppercase", color: "#8B1A2E", fontWeight: 700 }}>
+              formspsi
+            </span>
+          </div>
+          <span style={{ color: "var(--border)", fontSize: "0.8rem" }}>·</span>
+          <span style={{ fontSize: "0.82rem", fontWeight: 500, color: "var(--fg)" }}>Indicações</span>
+        </div>
 
-        {/* SIDEBAR */}
-        <aside style={{
-          width: 240, minHeight: "100vh", flexShrink: 0,
-          background: "var(--dash-surface)", borderRight: "1.5px solid var(--dash-border)",
-          display: "flex", flexDirection: "column", padding: "32px 16px",
-          position: "sticky", top: 0, height: "100vh",
-        }}>
-          <div style={{ padding: "0 8px", marginBottom: 36 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-              <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#8B1A2E" }} />
-              <span style={{ fontSize: "0.6rem", letterSpacing: "0.26em", textTransform: "uppercase", color: "#8B1A2E", fontWeight: 700 }}>
-                formspsi
-              </span>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <ThemeToggle />
+          {isPsi && (
+            <a href="/dashboard" style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "0.75rem", color: "var(--muted)", textDecoration: "none", padding: "6px 12px", borderRadius: 8, border: "1.5px solid var(--border)", transition: "all 0.18s" }}
+              onMouseEnter={e => (e.currentTarget.style.borderColor = "var(--red)", e.currentTarget.style.color = "var(--red)")}
+              onMouseLeave={e => (e.currentTarget.style.borderColor = "var(--border)", e.currentTarget.style.color = "var(--muted)")}
+            >
+              <ArrowLeft size={12} strokeWidth={2} />
+              Dashboard
+            </a>
+          )}
+        </div>
+      </header>
+
+      {/* CONTEÚDO */}
+      <div style={{ flex: 1, padding: "48px 40px", maxWidth: 960, margin: "0 auto", width: "100%", opacity: show ? 1 : 0, transition: "opacity 0.5s ease" }}>
+
+        {/* HERO */}
+        <div style={{ marginBottom: 48 }}>
+          <p style={{ fontSize: "0.68rem", letterSpacing: "0.28em", textTransform: "uppercase", color: "var(--red)", fontWeight: 600, marginBottom: 10 }}>
+            Laura Danieli da Silva — CRP 08/47844
+          </p>
+          <h1 style={{ fontWeight: 700, fontSize: "2.2rem", color: "var(--fg)", lineHeight: 1.2, marginBottom: 12 }}>
+            Indicações terapêuticas
+          </h1>
+          <p style={{ fontWeight: 300, fontSize: "0.9rem", color: "var(--muted)", maxWidth: 520, lineHeight: 1.7 }}>
+            Livros, séries e filmes selecionados com intenção terapêutica para apoiar o seu processo.
+          </p>
+        </div>
+
+        {/* AÇÕES */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16, marginBottom: 28 }}>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            {(["todos", "livro", "serie", "filme"] as Filtro[]).map(f => (
+              <button key={f} className={`filtro-btn${filtro === f ? " ativo" : ""}`} onClick={() => setFiltro(f)}>
+                {f !== "todos" && TIPO_ICON[f as Tipo]}
+                {f === "todos" ? "Todos" : TIPO_LABEL[f as Tipo]}
+                <span style={{ fontSize: "0.65rem", opacity: 0.65 }}>({counts[f]})</span>
+              </button>
+            ))}
+          </div>
+          {isPsi && (
+            <button className="btn-novo" onClick={() => setModalAberto(true)}>
+              <Plus size={14} strokeWidth={2.5} />
+              Nova indicação
+            </button>
+          )}
+        </div>
+
+        {/* LISTA */}
+        {carregando ? (
+          <div style={{ display: "flex", justifyContent: "center", padding: "80px 0" }}>
+            <div style={{ width: 32, height: 32, borderRadius: "50%", border: "2px solid var(--border)", borderTopColor: "var(--red)", animation: "spin 0.9s linear infinite" }} />
+          </div>
+        ) : filtradas.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "80px 24px" }}>
+            <div style={{ width: 56, height: 56, borderRadius: 16, background: "rgba(139,26,46,0.07)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
+              <BookOpen size={24} strokeWidth={1.2} style={{ color: "#8B1A2E", opacity: 0.6 }} />
             </div>
-            <p style={{ fontWeight: 500, fontSize: "0.95rem", color: "var(--dash-fg)" }}>
-              área da psicóloga
+            <p style={{ fontWeight: 500, color: "var(--fg)", marginBottom: 6 }}>
+              {filtro === "todos" ? "Nenhuma indicação ainda" : `Nenhum ${TIPO_LABEL[filtro as Tipo].toLowerCase()} indicado`}
+            </p>
+            <p style={{ fontWeight: 300, fontSize: "0.82rem", color: "var(--muted)" }}>
+              Em breve você terá indicações personalizadas aqui.
             </p>
           </div>
-
-          <nav style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
-            <button className="nav-link" onClick={() => router.push("/dashboard")}>
-              <FileText size={15} strokeWidth={1.5} />
-              Prontuários
-            </button>
-            <button className="nav-link" onClick={() => { localStorage.removeItem("formspsi-draft"); router.push("/prontuario"); }}>
-              <Plus size={15} strokeWidth={1.5} />
-              Novo prontuário
-            </button>
-            <button className="nav-link active">
-              <BookOpen size={15} strokeWidth={1.5} />
-              Indicações
-            </button>
-          </nav>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            <ThemeToggle />
-            <button className="nav-link" onClick={sair}>
-              <LogOut size={15} strokeWidth={1.5} />
-              Sair
-            </button>
-          </div>
-        </aside>
-
-        {/* MAIN */}
-        <main style={{ flex: 1, overflowY: "auto", padding: "40px 48px" }}>
-          <div style={{ maxWidth: 880, margin: "0 auto", opacity: show ? 1 : 0, transform: show ? "none" : "translateY(16px)", transition: "opacity 0.5s ease, transform 0.5s ease" }}>
-
-            {/* HEADER */}
-            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 36, gap: 16 }}>
-              <div>
-                <h1 style={{ fontWeight: 700, fontSize: "1.9rem", color: "var(--dash-fg)", marginBottom: 4, lineHeight: 1.2 }}>
-                  Indicações
-                </h1>
-                <p style={{ fontWeight: 300, fontSize: "0.82rem", color: "var(--dash-muted)" }}>
-                  {lista.length} {lista.length === 1 ? "indicação registrada" : "indicações registradas"}
-                </p>
-              </div>
-              <button className="btn-novo" onClick={() => setModalAberto(true)}>
-                <Plus size={15} strokeWidth={2.5} />
-                Nova indicação
-              </button>
-            </div>
-
-            {/* FILTROS */}
-            <div style={{ display: "flex", gap: 8, marginBottom: 28, flexWrap: "wrap" }}>
-              {(["todos", "livro", "serie", "filme"] as Filtro[]).map(f => (
-                <button
-                  key={f}
-                  className={`filtro-btn${filtro === f ? " active" : ""}`}
-                  onClick={() => setFiltro(f)}
+        ) : (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 14 }}>
+            {filtradas.map((ind, i) => {
+              const apagando = deletandoId === ind.id;
+              return (
+                <div
+                  key={ind.id}
+                  className="ind-card"
+                  style={{
+                    opacity: apagando ? 0 : 1,
+                    transform: apagando ? "scale(0.97)" : "translateY(0)",
+                    transition: `opacity 0.3s ease, transform 0.3s ease ${i * 0.04}s, box-shadow 0.2s`,
+                    animation: `fadeUp 0.4s ease ${i * 0.05}s both`,
+                  }}
                 >
-                  {f === "todos" ? null : TIPO_ICON[f as Tipo]}
-                  {f === "todos" ? "Todos" : TIPO_LABEL[f as Tipo]}
-                  <span style={{ fontSize: "0.65rem", opacity: 0.7 }}>({counts[f]})</span>
-                </button>
-              ))}
-            </div>
+                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10, marginBottom: 14 }}>
+                    <span style={{
+                      display: "inline-flex", alignItems: "center", gap: 5,
+                      padding: "4px 10px", borderRadius: 20,
+                      background: `${TIPO_COLOR[ind.tipo]}18`,
+                      color: TIPO_COLOR[ind.tipo],
+                      fontSize: "0.68rem", fontWeight: 600, letterSpacing: "0.06em",
+                    }}>
+                      {TIPO_ICON[ind.tipo]}
+                      {TIPO_LABEL[ind.tipo]}
+                    </span>
+                    {isPsi && (
+                      <button className="icon-btn" onClick={() => deletar(ind.id)}>
+                        <Trash2 size={12} strokeWidth={1.5} />
+                      </button>
+                    )}
+                  </div>
 
-            {/* LISTA */}
-            {filtradas.length === 0 ? (
-              <div style={{ textAlign: "center", padding: "80px 24px" }}>
-                <div style={{ width: 56, height: 56, borderRadius: 16, background: "rgba(139,26,46,0.07)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
-                  <BookOpen size={24} strokeWidth={1.2} style={{ color: "#8B1A2E", opacity: 0.6 }} />
-                </div>
-                <p style={{ fontWeight: 500, fontSize: "0.95rem", color: "var(--dash-fg)", marginBottom: 6 }}>
-                  {filtro === "todos" ? "Nenhuma indicação ainda" : `Nenhum ${TIPO_LABEL[filtro as Tipo].toLowerCase()} indicado`}
-                </p>
-                <p style={{ fontWeight: 300, fontSize: "0.8rem", color: "var(--dash-muted)", marginBottom: 24 }}>
-                  Adicione livros, séries e filmes para seus pacientes.
-                </p>
-                <button className="btn-novo" onClick={() => setModalAberto(true)}>
-                  <Plus size={14} strokeWidth={2.5} />
-                  Nova indicação
-                </button>
-              </div>
-            ) : (
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 14 }}>
-                {filtradas.map((ind, i) => {
-                  const apagando = deletandoId === ind.id;
-                  return (
-                    <div
-                      key={ind.id}
-                      className="ind-card"
-                      style={{
-                        opacity: apagando ? 0 : show ? 1 : 0,
-                        transform: apagando ? "scale(0.97)" : show ? "translateY(0)" : "translateY(12px)",
-                        transition: `opacity 0.3s ease, transform 0.3s ease ${i * 0.04}s, box-shadow 0.2s, border-color 0.2s`,
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 12 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                          <span style={{
-                            display: "inline-flex", alignItems: "center", gap: 5,
-                            padding: "4px 10px", borderRadius: 20,
-                            background: `${TIPO_COLOR[ind.tipo]}14`,
-                            color: TIPO_COLOR[ind.tipo],
-                            fontSize: "0.68rem", fontWeight: 600, letterSpacing: "0.08em",
-                          }}>
-                            {TIPO_ICON[ind.tipo]}
-                            {TIPO_LABEL[ind.tipo]}
-                          </span>
-                        </div>
-                        <button className="icon-btn danger" onClick={() => deletar(ind.id)}>
-                          <Trash2 size={13} strokeWidth={1.5} />
-                        </button>
-                      </div>
-
-                      <p style={{ fontWeight: 600, fontSize: "0.95rem", color: "var(--dash-fg)", marginBottom: 4, lineHeight: 1.3 }}>
-                        {ind.titulo}
-                      </p>
-                      {ind.autor && (
-                        <p style={{ fontWeight: 300, fontSize: "0.78rem", color: "var(--dash-muted)", marginBottom: ind.notas || ind.paciente ? 12 : 0 }}>
-                          {ind.autor}
-                        </p>
-                      )}
-
-                      {ind.notas && (
-                        <p style={{
-                          fontWeight: 300, fontSize: "0.8rem", color: "var(--dash-fg)",
-                          lineHeight: 1.55, marginBottom: ind.paciente ? 12 : 0,
-                          padding: "10px 12px", borderRadius: 10,
-                          background: "var(--dash-bg)", borderLeft: `3px solid ${TIPO_COLOR[ind.tipo]}`,
-                        }}>
-                          {ind.notas}
-                        </p>
-                      )}
-
-                      {ind.paciente && (
-                        <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: ind.notas ? 10 : 0 }}>
-                          <div style={{ width: 5, height: 5, borderRadius: "50%", background: "var(--dash-pale)", flexShrink: 0 }} />
-                          <span style={{ fontSize: "0.72rem", color: "var(--dash-muted)", fontWeight: 400 }}>
-                            Para {ind.paciente}
-                          </span>
-                        </div>
-                      )}
-
-                      <p style={{ fontSize: "0.65rem", color: "var(--dash-pale)", marginTop: 14, textAlign: "right" }}>
-                        {formatData(ind.criado_em)}
-                      </p>
+                  <p style={{ fontWeight: 600, fontSize: "1rem", color: "var(--fg)", marginBottom: ind.autor ? 4 : 0, lineHeight: 1.3 }}>
+                    {ind.titulo}
+                  </p>
+                  {ind.autor && (
+                    <p style={{ fontWeight: 300, fontSize: "0.78rem", color: "var(--muted)", marginBottom: ind.notas ? 14 : 0 }}>
+                      {ind.autor}
+                    </p>
+                  )}
+                  {ind.notas && (
+                    <p style={{
+                      fontWeight: 300, fontSize: "0.82rem", color: "var(--fg)",
+                      lineHeight: 1.6, padding: "10px 14px", borderRadius: 10,
+                      background: "var(--bg)", borderLeft: `3px solid ${TIPO_COLOR[ind.tipo]}`,
+                      marginTop: ind.autor ? 0 : 14,
+                    }}>
+                      {ind.notas}
+                    </p>
+                  )}
+                  {ind.paciente && (
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 12 }}>
+                      <div style={{ width: 5, height: 5, borderRadius: "50%", background: "var(--pale)", flexShrink: 0 }} />
+                      <span style={{ fontSize: "0.72rem", color: "var(--muted)" }}>Para {ind.paciente}</span>
                     </div>
-                  );
-                })}
-              </div>
-            )}
+                  )}
+                  {ind.criado_em && (
+                    <p style={{ fontSize: "0.65rem", color: "var(--pale)", marginTop: 14, textAlign: "right" }}>
+                      {formatData(ind.criado_em)}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
           </div>
-        </main>
+        )}
       </div>
 
-      {/* MODAL */}
-      {modalAberto && (
+      {/* FOOTER */}
+      <footer style={{ borderTop: "1.5px solid var(--border)", padding: "24px 40px", textAlign: "center" }}>
+        <p style={{ fontSize: "0.7rem", color: "var(--pale)", fontWeight: 300 }}>
+          Laura Danieli da Silva · CRP 08/47844 · formspsi
+        </p>
+      </footer>
+
+      {/* MODAL — visível só para psi */}
+      {modalAberto && isPsi && (
         <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) setModalAberto(false); }}>
           <div className="modal-box">
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 28 }}>
-              <h2 style={{ fontWeight: 700, fontSize: "1.15rem", color: "var(--dash-fg)" }}>
-                Nova indicação
-              </h2>
-              <button className="icon-btn" onClick={() => setModalAberto(false)} style={{ color: "var(--dash-muted)" }}>
+              <h2 style={{ fontWeight: 700, fontSize: "1.1rem", color: "var(--fg)" }}>Nova indicação</h2>
+              <button className="icon-btn" onClick={() => setModalAberto(false)} style={{ color: "var(--muted)" }}>
                 <X size={16} strokeWidth={1.8} />
               </button>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-              {/* TIPO */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
               <div>
                 <label className="field-label">Tipo</label>
                 <div style={{ display: "flex", gap: 8 }}>
                   {(["livro", "serie", "filme"] as Tipo[]).map(t => (
                     <button
                       key={t}
-                      className={`tipo-btn${form.tipo === t ? ` active-${t}` : ""}`}
+                      className={`tipo-btn${form.tipo === t ? ` tipo-${t}` : ""}`}
                       onClick={() => setForm(f => ({ ...f, tipo: t }))}
                     >
                       {TIPO_ICON[t]}
@@ -389,7 +345,6 @@ export default function IndicacoesPage() {
                 </div>
               </div>
 
-              {/* TÍTULO */}
               <div>
                 <label className="field-label">Título *</label>
                 <input
@@ -400,7 +355,6 @@ export default function IndicacoesPage() {
                 />
               </div>
 
-              {/* AUTOR */}
               <div>
                 <label className="field-label">
                   {form.tipo === "livro" ? "Autor(a)" : form.tipo === "serie" ? "Criador(a) / Plataforma" : "Diretor(a) / Ano"}
@@ -413,7 +367,6 @@ export default function IndicacoesPage() {
                 />
               </div>
 
-              {/* NOTAS */}
               <div>
                 <label className="field-label">Notas terapêuticas</label>
                 <textarea
@@ -421,12 +374,11 @@ export default function IndicacoesPage() {
                   rows={3}
                   value={form.notas}
                   onChange={e => setForm(f => ({ ...f, notas: e.target.value }))}
-                  placeholder="Por que você está indicando? O que trabalha terapeuticamente?"
+                  placeholder="Por que está indicando? O que trabalha terapeuticamente?"
                   style={{ resize: "none" }}
                 />
               </div>
 
-              {/* PACIENTE */}
               <div>
                 <label className="field-label">Para qual paciente (opcional)</label>
                 <input
@@ -437,15 +389,13 @@ export default function IndicacoesPage() {
                 />
               </div>
 
-              {/* BOTÕES */}
               <div style={{ display: "flex", gap: 10, marginTop: 4 }}>
                 <button
                   onClick={() => setModalAberto(false)}
                   style={{
-                    flex: 1, padding: "11px", borderRadius: 10, border: "1.5px solid var(--dash-border)",
-                    background: "transparent", color: "var(--dash-muted)", fontSize: "0.82rem",
-                    fontFamily: "'Montserrat', sans-serif", fontWeight: 500, cursor: "pointer",
-                    transition: "border-color 0.2s",
+                    flex: 1, padding: 11, borderRadius: 10, border: "1.5px solid var(--border)",
+                    background: "transparent", color: "var(--muted)", fontSize: "0.82rem",
+                    fontWeight: 500, cursor: "pointer",
                   }}
                 >
                   Cancelar
@@ -456,18 +406,17 @@ export default function IndicacoesPage() {
                   disabled={!form.titulo.trim() || salvando}
                   style={{ flex: 2, justifyContent: "center", opacity: !form.titulo.trim() ? 0.5 : 1 }}
                 >
-                  {salvando ? (
-                    <span style={{ width: 14, height: 14, border: "2px solid rgba(255,255,255,0.4)", borderTopColor: "#fff", borderRadius: "50%", display: "inline-block", animation: "spin 0.8s linear infinite" }} />
-                  ) : (
-                    <Check size={14} strokeWidth={2.5} />
-                  )}
-                  {salvando ? "Salvando..." : "Salvar indicação"}
+                  {salvando
+                    ? <span style={{ width: 14, height: 14, border: "2px solid rgba(255,255,255,0.4)", borderTopColor: "#fff", borderRadius: "50%", display: "inline-block", animation: "spin 0.8s linear infinite" }} />
+                    : <Check size={14} strokeWidth={2.5} />
+                  }
+                  {salvando ? "Salvando..." : "Salvar"}
                 </button>
               </div>
             </div>
           </div>
         </div>
       )}
-    </div>
+    </main>
   );
 }
