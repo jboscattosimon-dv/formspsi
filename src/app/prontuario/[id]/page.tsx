@@ -133,7 +133,7 @@ export default function ProntuarioViewPage() {
 
       if (contato.length) {
         checkPage(20);
-        pdf.setFontSize(8); pdf.setTextColor("#C0392B"); pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(8); pdf.setTextColor("#8B1A2E"); pdf.setFont("helvetica", "bold");
         pdf.text("CONTATO E LOCALIZAÇÃO", ML, y); y += 6;
         const cw2 = contato.length >= 2 ? colW / 2 : colW;
         const linhas = Math.ceil(contato.length / 2);
@@ -154,7 +154,7 @@ export default function ProntuarioViewPage() {
       ].filter(c => c.valor);
       if (perfil.length) {
         checkPage(16);
-        pdf.setFontSize(8); pdf.setTextColor("#C0392B"); pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(8); pdf.setTextColor("#8B1A2E"); pdf.setFont("helvetica", "bold");
         pdf.text("PERFIL", ML, y); y += 6;
         perfil.forEach((c, i) => {
           pdf.setFont("helvetica", "normal");
@@ -167,7 +167,7 @@ export default function ProntuarioViewPage() {
       /* Medicação */
       if (dados.medicacao) {
         checkPage(20);
-        pdf.setFontSize(8); pdf.setTextColor("#C0392B"); pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(8); pdf.setTextColor("#8B1A2E"); pdf.setFont("helvetica", "bold");
         pdf.text("MEDICAÇÃO PSIQUIÁTRICA", ML, y); y += 6;
         pdf.setFont("helvetica", "normal");
         pdf.setFontSize(9.5); pdf.setTextColor("#2A1815");
@@ -180,7 +180,7 @@ export default function ProntuarioViewPage() {
       if (dados.motivo) {
         checkPage(24); y += 4;
         pdf.setFont("helvetica", "bold");
-        pdf.setFontSize(8); pdf.setTextColor("#C0392B");
+        pdf.setFontSize(8); pdf.setTextColor("#8B1A2E");
         pdf.text("MOTIVO DA CONSULTA", ML, y); y += 8;
         pdf.setDrawColor("#E5D8CC"); pdf.setLineWidth(0.2);
         pdf.line(ML, y - 4, W - MR, y - 4);
@@ -209,9 +209,9 @@ export default function ProntuarioViewPage() {
   };
 
   if (!dados) return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#FAF6F0" }}>
-      <div style={{ width: 36, height: 36, borderRadius: "50%", border: "2px solid #C0392B", display: "flex", alignItems: "center", justifyContent: "center", animation: "breathe 2s ease-in-out infinite" }}>
-        <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#C0392B" }} />
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#F7EFE4" }}>
+      <div style={{ width: 36, height: 36, borderRadius: "50%", border: "2px solid #8B1A2E", display: "flex", alignItems: "center", justifyContent: "center", animation: "breathe 2s ease-in-out infinite" }}>
+        <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#8B1A2E" }} />
       </div>
     </div>
   );
@@ -223,8 +223,8 @@ export default function ProntuarioViewPage() {
   return (
     <div style={{ minHeight: "100vh", background: "var(--pv-bg)" }}>
       <style>{`
-        :root { --pv-bg:#F5F0EA; --pv-surface:#FDFAF7; --pv-border:#E5D8CC; --pv-fg:#2A1815; --pv-muted:#8A7A74; --pv-pale:#B5A8A0; --pv-red:#C0392B; --pv-doc:#FFFFFF; }
-        .dark { --pv-bg:#140D0B; --pv-surface:#1C1210; --pv-border:#3A201A; --pv-fg:#F0E5DC; --pv-muted:#6A5A54; --pv-pale:#4A3830; --pv-red:#D44030; --pv-doc:#1A0F0D; }
+        :root { --pv-bg:#F2E8D8; --pv-surface:#FAF3E8; --pv-border:#E2CEB8; --pv-fg:#2A1A12; --pv-muted:#8A7870; --pv-pale:#B0A090; --pv-red:#8B1A2E; --pv-doc:#FDF8F0; }
+        .dark { --pv-bg:#130A05; --pv-surface:#1A1008; --pv-border:#3A200F; --pv-fg:#F0E5D8; --pv-muted:#6A5A4A; --pv-pale:#4A3828; --pv-red:#A8263C; --pv-doc:#180E09; }
         * { font-family: 'Montserrat', sans-serif; }
         .pv-toolbar { position:sticky; top:0; z-index:50; background:var(--pv-surface); border-bottom:1.5px solid var(--pv-border); }
         .pv-btn { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:8px; border:none; cursor:pointer; font-size:0.75rem; font-family:'Montserrat',sans-serif; font-weight:500; letter-spacing:0.03em; transition:all 0.18s; }
@@ -232,8 +232,8 @@ export default function ProntuarioViewPage() {
         .pv-btn-ghost:hover { background:var(--pv-bg); color:var(--pv-fg); }
         .pv-btn-outline { background:transparent; border:1.5px solid var(--pv-border) !important; color:var(--pv-muted); }
         .pv-btn-outline:hover { border-color:var(--pv-red) !important; color:var(--pv-red); }
-        .pv-btn-red { background:#C0392B; color:#fff; }
-        .pv-btn-red:hover { background:#9B2E22; }
+        .pv-btn-red { background:#8B1A2E; color:#fff; }
+        .pv-btn-red:hover { background:#6B1222; }
         .pv-btn-dark { background:var(--pv-fg); color:var(--pv-doc); }
         .pv-btn-dark:hover { opacity:0.85; }
         .pv-btn-dark:disabled { opacity:0.5; cursor:not-allowed; }
@@ -275,9 +275,9 @@ export default function ProntuarioViewPage() {
           style={{ background: "var(--pv-doc)", borderRadius: 20, border: "1.5px solid var(--pv-border)", boxShadow: "0 8px 48px rgba(192,57,43,0.06)", overflow: "hidden", opacity: show ? 1 : 0, transform: show ? "translateY(0)" : "translateY(20px)", transition: "opacity 0.6s ease, transform 0.6s ease" }}
         >
           {/* CAPA */}
-          <div style={{ background: "#C0392B", padding: "52px 56px 44px", position: "relative", overflow: "hidden" }}>
-            <div style={{ position: "absolute", top: -60, right: -60, width: 280, height: 280, borderRadius: "50%", background: "rgba(255,255,255,0.08)", filter: "blur(40px)" }} />
-            <div style={{ position: "absolute", bottom: -40, left: -20, width: 220, height: 220, borderRadius: "50%", background: "rgba(0,0,0,0.08)", filter: "blur(40px)" }} />
+          <div style={{ background: "#2A1A12", padding: "52px 56px 44px", position: "relative", overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: -60, right: -60, width: 300, height: 300, borderRadius: "50%", background: "rgba(139,26,46,0.25)", filter: "blur(60px)" }} />
+            <div style={{ position: "absolute", bottom: -40, left: -20, width: 240, height: 240, borderRadius: "50%", background: "rgba(247,239,228,0.06)", filter: "blur(50px)" }} />
             <div style={{ position: "relative" }}>
               <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: "0.58rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "rgba(255,255,255,0.5)", marginBottom: 10 }}>
                 prontuário psicológico
@@ -383,7 +383,7 @@ function Secao({ titulo, children, ultima = false }: { titulo: string; children:
   return (
     <div style={{ marginBottom: ultima ? 0 : 48, paddingBottom: ultima ? 0 : 48, borderBottom: ultima ? "none" : "1px solid var(--pv-border)" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 28 }}>
-        <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: "0.6rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#C0392B", whiteSpace: "nowrap" }}>
+        <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: "0.6rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#8B1A2E", whiteSpace: "nowrap" }}>
           {titulo}
         </span>
         <div style={{ flex: 1, height: 1, background: "var(--pv-border)" }} />

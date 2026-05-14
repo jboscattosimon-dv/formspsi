@@ -21,7 +21,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body style={{ minHeight: "100vh", fontFamily: "'Montserrat', sans-serif", background: "#FAF6F0", color: "#2A1815" }}>
+      <body style={{ minHeight: "100vh", fontFamily: "'Montserrat', sans-serif", background: "#F7EFE4", color: "#2A1A12" }}>
         <ThemeProvider>
           <div className="grain-overlay" aria-hidden="true" />
           {children}

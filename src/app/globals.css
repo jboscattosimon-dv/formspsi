@@ -5,122 +5,58 @@
   --font-main: 'Montserrat', sans-serif;
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-html {
-  scroll-behavior: smooth;
-}
+* { box-sizing: border-box; padding: 0; margin: 0; }
+html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-main);
-  background-color: #FAF6F0;
-  color: #2A1815;
+  background-color: #F7EFE4;
+  color: #2A1A12;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 .dark body {
-  background-color: #1A0F0D;
-  color: #F0E5DC;
+  background-color: #180E09;
+  color: #F0E5D8;
 }
 
 .grain-overlay {
-  position: fixed;
-  inset: -50%;
-  width: 200%;
-  height: 200%;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.02;
+  position: fixed; inset: -50%; width: 200%; height: 200%;
+  pointer-events: none; z-index: 9999; opacity: 0.018;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   animation: grain 0.4s steps(1) infinite;
 }
 
 @keyframes grain {
   0%, 100% { transform: translate(0,0); }
-  10%       { transform: translate(-1%,-1%); }
-  20%       { transform: translate(1%,1%); }
-  30%       { transform: translate(-2%,1%); }
-  40%       { transform: translate(2%,-1%); }
-  50%       { transform: translate(-1%,2%); }
-  60%       { transform: translate(1%,-2%); }
-  70%       { transform: translate(-2%,-1%); }
-  80%       { transform: translate(2%,1%); }
-  90%       { transform: translate(-1%,1%); }
+  10% { transform: translate(-1%,-1%); }
+  20% { transform: translate(1%,1%); }
+  30% { transform: translate(-2%,1%); }
+  40% { transform: translate(2%,-1%); }
+  50% { transform: translate(-1%,2%); }
+  60% { transform: translate(1%,-2%); }
+  70% { transform: translate(-2%,-1%); }
+  80% { transform: translate(2%,1%); }
+  90% { transform: translate(-1%,1%); }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes breathe { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.08); } }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+.animate-spin-slow { animation: spin 1s linear infinite; }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-10px); }
-}
-
-@keyframes breathe {
-  0%, 100% { opacity: 0.3; transform: scale(1); }
-  50%       { opacity: 0.6; transform: scale(1.08); }
-}
-
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.animate-spin-slow {
-  animation: spin 1s linear infinite;
-}
-
-.glass {
-  background: rgba(250, 246, 240, 0.82);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(192, 57, 43, 0.1);
-}
-
-.dark .glass {
-  background: rgba(35, 20, 17, 0.82);
-  border-color: rgba(192, 57, 43, 0.14);
-}
-
-::-webkit-scrollbar       { width: 4px; }
+::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #E0CFC5; border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: #C0392B; }
+::-webkit-scrollbar-thumb { background: #D8C8B8; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #8B1A2E; }
 
 textarea { resize: none; }
 input:focus, textarea:focus { outline: none; }
 
-.progress-track {
-  height: 2px;
-  background: rgba(192, 57, 43, 0.12);
-  border-radius: 1px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #C0392B, #9B2E22);
-  border-radius: 1px;
-  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
 @media print {
   .no-print { display: none !important; }
-  body { background: white !important; color: #2A1815 !important; }
+  body { background: white !important; color: #2A1A12 !important; }
 }

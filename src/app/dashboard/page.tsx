@@ -33,7 +33,7 @@ function formatHora(iso: string) {
   return new Date(iso).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 }
 
-const CORES = ["#C0392B", "#9B2E22", "#A93226", "#7B241C", "#E74C3C"];
+const CORES = ["#8B1A2E", "#6B1222", "#A02840", "#5C1020", "#9B2435"];
 
 function corAvatar(nome: string) {
   let h = 0;
@@ -105,14 +105,14 @@ export default function DashboardPage() {
     <div style={{ minHeight: "100vh", background: "var(--dash-bg)", display: "flex", flexDirection: "column" }}>
       <style>{`
         :root {
-          --dash-bg: #F5F0EA; --dash-surface: #FDFAF7; --dash-border: #E5D8CC;
-          --dash-muted: #8A7A74; --dash-fg: #2A1815; --dash-red: #C0392B;
-          --dash-red-deep: #9B2E22; --dash-card: #FFFFFF; --dash-pale: #B5A8A0;
+          --dash-bg: #F2E8D8; --dash-surface: #F9F2E5; --dash-border: #E2CEB8;
+          --dash-muted: #8A7870; --dash-fg: #2A1A12; --dash-red: #8B1A2E;
+          --dash-red-deep: #6B1222; --dash-card: #FDF8F0; --dash-pale: #B0A090;
         }
         .dark {
-          --dash-bg: #140D0B; --dash-surface: #1C1210; --dash-border: #3A201A;
-          --dash-muted: #6A5A54; --dash-fg: #F0E5DC; --dash-red: #D44030;
-          --dash-red-deep: #C0392B; --dash-card: #1F1412; --dash-pale: #4A3830;
+          --dash-bg: #130A05; --dash-surface: #1A1008; --dash-border: #3A200F;
+          --dash-muted: #6A5A4A; --dash-fg: #F0E5D8; --dash-red: #A8263C;
+          --dash-red-deep: #8B1A2E; --dash-card: #1F1208; --dash-pale: #4A3828;
         }
         * { font-family: 'Montserrat', sans-serif; }
         .dash-input {
@@ -130,19 +130,19 @@ export default function DashboardPage() {
           cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
         }
         .dash-card:hover {
-          border-color: #D9CBBF; box-shadow: 0 4px 24px rgba(192,57,43,0.07);
+          border-color: #D9CBBF; box-shadow: 0 4px 24px rgba(139,26,46,0.07);
           transform: translateY(-1px);
         }
         .dark .dash-card:hover { border-color: #4A2820; }
         .btn-novo {
           display: inline-flex; align-items: center; gap: 8px;
-          background: #C0392B; color: #fff; border: none; border-radius: 12px;
+          background: #8B1A2E; color: #fff; border: none; border-radius: 12px;
           padding: 11px 22px; font-size: 0.8rem;
           font-family: 'Montserrat', sans-serif; font-weight: 600;
           letter-spacing: 0.06em; cursor: pointer; white-space: nowrap;
           transition: background 0.2s, box-shadow 0.2s;
         }
-        .btn-novo:hover { background: #9B2E22; box-shadow: 0 4px 16px rgba(192,57,43,0.25); }
+        .btn-novo:hover { background: #6B1222; box-shadow: 0 4px 16px rgba(139,26,46,0.25); }
         .icon-btn {
           width: 32px; height: 32px; border-radius: 8px; border: none;
           display: flex; align-items: center; justify-content: center;
@@ -163,11 +163,11 @@ export default function DashboardPage() {
           color: var(--dash-muted); transition: all 0.18s; text-align: left;
         }
         .nav-link:hover { background: var(--dash-bg); color: var(--dash-fg); }
-        .nav-link.active { background: rgba(192,57,43,0.08); color: var(--dash-red); font-weight: 600; }
+        .nav-link.active { background: rgba(139,26,46,0.08); color: var(--dash-red); font-weight: 600; }
       `}</style>
 
       {/* Orbs */}
-      <div style={{ position: "fixed", top: -100, right: -100, width: 500, height: 500, borderRadius: "50%", background: "radial-gradient(circle, #F2C8C3 0%, transparent 65%)", filter: "blur(100px)", opacity: 0.3, pointerEvents: "none" }} />
+      <div style={{ position: "fixed", top: -100, right: -100, width: 500, height: 500, borderRadius: "50%", background: "radial-gradient(circle, #EAD8C0 0%, transparent 65%)", filter: "blur(100px)", opacity: 0.3, pointerEvents: "none" }} />
 
       <div style={{ display: "flex", minHeight: "100vh" }}>
 
@@ -180,8 +180,8 @@ export default function DashboardPage() {
         }}>
           <div style={{ padding: "0 8px", marginBottom: 36 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-              <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#C0392B" }} />
-              <span style={{ fontSize: "0.6rem", letterSpacing: "0.26em", textTransform: "uppercase", color: "#C0392B", fontFamily: "'Montserrat', sans-serif", fontWeight: 700 }}>
+              <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#8B1A2E" }} />
+              <span style={{ fontSize: "0.6rem", letterSpacing: "0.26em", textTransform: "uppercase", color: "#8B1A2E", fontFamily: "'Montserrat', sans-serif", fontWeight: 700 }}>
                 formspsi
               </span>
             </div>
@@ -305,7 +305,7 @@ export default function DashboardPage() {
                         <button className="icon-btn danger" onClick={() => deletar(p.id)} aria-label="Excluir" title="Excluir">
                           <Trash2 size={14} strokeWidth={1.5} />
                         </button>
-                        <button className="icon-btn" onClick={() => router.push(`/prontuario/${p.id}`)} aria-label="Abrir" style={{ color: "#C0392B" }} title="Abrir">
+                        <button className="icon-btn" onClick={() => router.push(`/prontuario/${p.id}`)} aria-label="Abrir" style={{ color: "#8B1A2E" }} title="Abrir">
                           <ChevronRight size={16} strokeWidth={1.5} />
                         </button>
                       </div>
@@ -350,7 +350,7 @@ function EmptyState({ busca, onNovo }: { busca: string; onNovo: () => void }) {
       </p>
       {!busca && (
         <button onClick={onNovo}
-          style={{ background: "none", border: "none", cursor: "pointer", fontSize: "0.8rem", color: "#C0392B", fontFamily: "'Montserrat', sans-serif", fontWeight: 500, marginTop: 4 }}>
+          style={{ background: "none", border: "none", cursor: "pointer", fontSize: "0.8rem", color: "#8B1A2E", fontFamily: "'Montserrat', sans-serif", fontWeight: 500, marginTop: 4 }}>
           Criar o primeiro prontuário →
         </button>
       )}

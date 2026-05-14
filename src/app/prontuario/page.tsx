@@ -116,14 +116,14 @@ export default function ProntuarioPage() {
     <main style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "var(--bg)", position: "relative" }}>
       <style>{`
         :root {
-          --bg: #FAF6F0; --fg: #2A1815; --muted: #8A7A74;
-          --border: #E5D8CC; --red: #C0392B; --red-deep: #9B2E22;
-          --cream: #F0E8DC; --pale: #B5A8A0;
+          --bg: #F7EFE4; --fg: #2A1A12; --muted: #8A7870;
+          --border: #E2CEB8; --red: #8B1A2E; --red-deep: #6B1222;
+          --cream: #EEE0CE; --pale: #B0A090;
         }
         .dark {
-          --bg: #1A0F0D; --fg: #F0E5DC; --muted: #8A7A74;
-          --border: #3A201A; --red: #D44030; --red-deep: #C0392B;
-          --cream: #231411; --pale: #6A5A54;
+          --bg: #180E09; --fg: #F0E5D8; --muted: #8A7870;
+          --border: #3A200F; --red: #A8263C; --red-deep: #8B1A2E;
+          --cream: #221208; --pale: #6A5A4A;
         }
         .pron-input {
           width: 100%; background: transparent;
@@ -151,21 +151,21 @@ export default function ProntuarioPage() {
         .btn-primary {
           display: inline-flex; align-items: center; gap: 10px;
           padding: 14px 32px; border-radius: 999px; border: none; cursor: pointer;
-          background: #C0392B; color: #fff;
+          background: #8B1A2E; color: #fff;
           font-family: 'Montserrat', sans-serif; font-size: 0.75rem;
           font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
           transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
         }
-        .btn-primary:hover { background: #9B2E22; transform: translateY(-1px); box-shadow: 0 8px 28px rgba(192,57,43,0.3); }
+        .btn-primary:hover { background: #6B1222; transform: translateY(-1px); box-shadow: 0 8px 28px rgba(139,26,46,0.3); }
         .btn-red {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 12px 28px; border-radius: 999px; border: none; cursor: pointer;
-          background: #C0392B; color: #fff;
+          background: #8B1A2E; color: #fff;
           font-family: 'Montserrat', sans-serif; font-size: 0.75rem;
           font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
           transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
         }
-        .btn-red:hover { background: #9B2E22; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(192,57,43,0.32); }
+        .btn-red:hover { background: #6B1222; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(139,26,46,0.32); }
         .btn-red:disabled { opacity: 0.3; cursor: not-allowed; transform: none; box-shadow: none; }
         .btn-ghost {
           display: inline-flex; align-items: center; gap: 8px;
@@ -195,20 +195,20 @@ export default function ProntuarioPage() {
       `}</style>
 
       {/* Orbs */}
-      <div style={{ position: "fixed", top: -80, right: -80, width: 360, height: 360, borderRadius: "50%", background: "radial-gradient(circle, #F2C8C3 0%, transparent 70%)", filter: "blur(90px)", opacity: 0.45, pointerEvents: "none" }} />
-      <div style={{ position: "fixed", bottom: 40, left: -100, width: 320, height: 320, borderRadius: "50%", background: "radial-gradient(circle, #F5DDD9 0%, transparent 70%)", filter: "blur(100px)", opacity: 0.35, pointerEvents: "none" }} />
+      <div style={{ position: "fixed", top: -80, right: -80, width: 360, height: 360, borderRadius: "50%", background: "radial-gradient(circle, #EDD8C8 0%, transparent 70%)", filter: "blur(90px)", opacity: 0.45, pointerEvents: "none" }} />
+      <div style={{ position: "fixed", bottom: 40, left: -100, width: 320, height: 320, borderRadius: "50%", background: "radial-gradient(circle, #EDE0D0 0%, transparent 70%)", filter: "blur(100px)", opacity: 0.35, pointerEvents: "none" }} />
 
       {/* Nav */}
       <nav style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px 32px", borderBottom: "1px solid var(--border)", position: "relative", zIndex: 10, background: "var(--bg)" }}>
-        <span style={{ fontSize: "0.65rem", fontFamily: "'Montserrat', sans-serif", fontWeight: 800, color: "#C0392B", letterSpacing: "0.3em", textTransform: "uppercase" }}>
+        <span style={{ fontSize: "0.65rem", fontFamily: "'Montserrat', sans-serif", fontWeight: 800, color: "#8B1A2E", letterSpacing: "0.3em", textTransform: "uppercase" }}>
           formspsi
         </span>
         <ThemeToggle />
       </nav>
 
       {/* Progresso */}
-      <div style={{ height: 3, background: "rgba(192,57,43,0.1)" }}>
-        <div style={{ height: "100%", width: `${pctEtapa(etapa)}%`, background: "linear-gradient(90deg, #C0392B, #9B2E22)", transition: "width 0.6s cubic-bezier(.4,0,.2,1)" }} />
+      <div style={{ height: 3, background: "rgba(139,26,46,0.1)" }}>
+        <div style={{ height: "100%", width: `${pctEtapa(etapa)}%`, background: "linear-gradient(90deg, #8B1A2E, #6B1222)", transition: "width 0.6s cubic-bezier(.4,0,.2,1)" }} />
       </div>
 
       {/* Conteúdo */}
@@ -236,7 +236,7 @@ function Divisor() {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 28 }}>
       <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
-      <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#C0392B" }} />
+      <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#8B1A2E" }} />
       <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
     </div>
   );
@@ -277,7 +277,7 @@ function EtapaIntro({ onAvancar }: { onAvancar: () => void }) {
   return (
     <div style={{ textAlign: "center" }}>
       <Divisor />
-      <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: "0.6rem", color: "#C0392B", textTransform: "uppercase", letterSpacing: "0.28em", marginBottom: 20 }}>
+      <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: "0.6rem", color: "#8B1A2E", textTransform: "uppercase", letterSpacing: "0.28em", marginBottom: 20 }}>
         prontuário psicológico
       </p>
       <h2 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: "clamp(1.6rem, 4vw, 2.4rem)", color: "var(--fg)", lineHeight: 1.2, marginBottom: 28 }}>
@@ -294,8 +294,8 @@ function EtapaIntro({ onAvancar }: { onAvancar: () => void }) {
           utilizadas exclusivamente para compor o prontuário psicológico.
         </p>
         <div style={{ marginTop: 18, paddingTop: 16, borderTop: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#C0392B", flexShrink: 0 }} />
-          <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 600, fontSize: "0.8rem", color: "#C0392B", margin: 0 }}>
+          <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#8B1A2E", flexShrink: 0 }} />
+          <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 600, fontSize: "0.8rem", color: "#8B1A2E", margin: 0 }}>
             Letícia Bittencourt Reis — CRP 06/189562
           </p>
         </div>
@@ -502,8 +502,8 @@ function EtapaMotivo({ form, setForm, onAvancar, onVoltar }: {
 function EtapaFinalizando() {
   return (
     <div style={{ textAlign: "center", padding: "60px 0" }}>
-      <div style={{ width: 48, height: 48, borderRadius: "50%", border: "2px solid #C0392B", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px", animation: "breathe 2s ease-in-out infinite" }}>
-        <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#C0392B", animation: "breathe 2s ease-in-out infinite 0.4s" }} />
+      <div style={{ width: 48, height: 48, borderRadius: "50%", border: "2px solid #8B1A2E", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px", animation: "breathe 2s ease-in-out infinite" }}>
+        <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#8B1A2E", animation: "breathe 2s ease-in-out infinite 0.4s" }} />
       </div>
       <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 300, fontSize: "0.9rem", color: "var(--muted)" }}>
         Guardando seu cadastro com cuidado...
@@ -519,7 +519,7 @@ function EtapaConcluido({ nome, onVer }: { nome: string; onVer: () => void }) {
   return (
     <div style={{ textAlign: "center", opacity: show ? 1 : 0, transform: show ? "translateY(0)" : "translateY(20px)", transition: "opacity 0.8s ease, transform 0.8s ease" }}>
       <Divisor />
-      <div style={{ width: 56, height: 56, borderRadius: "50%", background: "linear-gradient(135deg, #C0392B, #9B2E22)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 28px" }}>
+      <div style={{ width: 56, height: 56, borderRadius: "50%", background: "linear-gradient(135deg, #8B1A2E, #6B1222)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 28px" }}>
         <Check size={24} strokeWidth={2.5} color="#fff" />
       </div>
       <h2 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: "clamp(1.6rem, 4vw, 2.2rem)", color: "var(--fg)", lineHeight: 1.25, marginBottom: 16 }}>
